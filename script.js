@@ -24,9 +24,9 @@ const CONFIG = {
 
     /* OWNER LOGIN */
 
-    ownerEmail: "dresseldj29@gmail.com",
+    ownerEmail: "Serverowner@gmail.com",
 
-    ownerPassword: "mamadj2609",
+    ownerPassword: "Server",
 
 
     /* SERVER */
