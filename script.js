@@ -19,9 +19,9 @@
    GitHub Pages kann JavaScript öffentlich anzeigen.
 ========================================================= */
 
-const OWNER_EMAIL = "deineemail@gmail.com";
+const OWNER_EMAIL = "ServerOwner@gmail.com";
 
-const OWNER_PASSWORD = "DeinPasswort123";
+const OWNER_PASSWORD = "Server";
 
 
 /* =========================================================
