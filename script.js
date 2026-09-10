@@ -16,9 +16,9 @@
 
 ========================================================= */
 
-const OWNER_EMAIL = "ServerOwner@gmail.com";
+const OWNER_EMAIL = "Server@gmail.com";
 
-const OWNER_PASSWORD = "Server112";
+const OWNER_PASSWORD = "Server";
 
 
 /* =========================================================
