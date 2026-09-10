@@ -1,104 +1,148 @@
-/* =====================================================
-   OWNER EINSTELLUNGEN
+/* ================================================= */
+/* MINECRAFT SERVER WEBSITE */
+/* ================================================= */
 
-   WICHTIG:
-   Alles hier ist öffentlich im Webseiten-Code sichtbar.
 
-   Benutze deshalb NICHT dein normales
-   Google-/Gmail-Passwort.
-===================================================== */
+/* ================================================= */
+/* OWNER LOGIN */
+/* ================================================= */
+
+/*
+    WICHTIG:
+
+    Diese Daten sind in einer GitHub-Pages-Webseite
+    NICHT geheim.
+
+    Jeder, der den Quellcode untersucht, kann sie
+    theoretisch sehen.
+
+    Deshalb hier niemals dein echtes Gmail-Passwort
+    verwenden.
+*/
 
 const OWNER_EMAIL = "ServerOwner@gmail.com";
 const OWNER_PASSWORD = "Server";
 
 
-/* =====================================================
-   STANDARD DATEN
-===================================================== */
+/* ================================================= */
+/* STANDARD DATEN */
+/* ================================================= */
 
-let websiteData = JSON.parse(
-    localStorage.getItem("minecraftWebsiteData")
-) || {
+const defaultData = {
 
-    domain: "play.deinserver.de",
+    server: {
+        status: "online",
+        domain: "play.deinserver.de",
+        players: "0 / 100",
+        version: "Java & Bedrock"
+    },
 
-    version: "1.21.x",
+    discord: "",
 
-    players: "0 / 100",
+    youtube: [],
 
-    status: "ONLINE",
-
-    discord:
-        "https://discord.gg/deinserver",
-
-    youtube: [
-        {
-            name: "Mein YouTube",
-            url: "https://youtube.com/"
-        }
-    ],
-
-    tiktok: [
-        {
-            name: "Mein TikTok",
-            url: "https://tiktok.com/"
-        }
-    ],
+    tiktok: [],
 
     wishes: []
 
 };
 
 
-/* =====================================================
-   ELEMENTE
-===================================================== */
+/* ================================================= */
+/* DATEN LADEN */
+/* ================================================= */
 
-const loginModal =
-    document.getElementById("loginModal");
+function getData() {
 
-const ownerPanel =
-    document.getElementById("ownerPanel");
+    const saved =
+        localStorage.getItem("minecraftServerData");
+
+    if (!saved) {
+
+        localStorage.setItem(
+            "minecraftServerData",
+            JSON.stringify(defaultData)
+        );
+
+        return structuredClone(defaultData);
+    }
+
+    try {
+
+        return JSON.parse(saved);
+
+    } catch {
+
+        return structuredClone(defaultData);
+
+    }
+}
 
 
-/* =====================================================
-   LOGIN ÖFFNEN
-===================================================== */
+/* ================================================= */
+/* DATEN SPEICHERN */
+/* ================================================= */
 
-document
-    .getElementById("ownerButton")
-    .addEventListener("click", function() {
+function saveData(data) {
 
-        loginModal.classList.add("show");
-
-    });
-
-
-/* =====================================================
-   LOGIN SCHLIESSEN
-===================================================== */
-
-function closeLogin() {
-
-    loginModal.classList.remove("show");
+    localStorage.setItem(
+        "minecraftServerData",
+        JSON.stringify(data)
+    );
 
 }
 
 
-/* =====================================================
-   OWNER LOGIN
-===================================================== */
+/* ================================================= */
+/* LOGIN ÖFFNEN */
+/* ================================================= */
 
-function loginOwner() {
+function openLogin() {
+
+    document
+        .getElementById("loginModal")
+        .classList.add("show");
+
+    document
+        .getElementById("loginEmail")
+        .focus();
+
+}
+
+
+/* ================================================= */
+/* LOGIN SCHLIESSEN */
+/* ================================================= */
+
+function closeLogin() {
+
+    document
+        .getElementById("loginModal")
+        .classList.remove("show");
+
+}
+
+
+/* ================================================= */
+/* OWNER LOGIN */
+/* ================================================= */
+
+function ownerLogin() {
 
     const email =
-        document.getElementById("loginEmail").value.trim();
+        document
+        .getElementById("loginEmail")
+        .value
+        .trim();
 
     const password =
-        document.getElementById("loginPassword").value;
+        document
+        .getElementById("loginPassword")
+        .value;
 
     const error =
-        document.getElementById("loginError");
+        document
+        .getElementById("loginError");
 
 
     if (
@@ -106,13 +150,16 @@ function loginOwner() {
         password === OWNER_PASSWORD
     ) {
 
+        localStorage.setItem(
+            "ownerLoggedIn",
+            "true"
+        );
+
         error.textContent = "";
 
-        loginModal.classList.remove("show");
+        closeLogin();
 
-        ownerPanel.classList.add("show");
-
-        loadAdminPanel();
+        openOwnerPanel();
 
     } else {
 
@@ -124,754 +171,873 @@ function loginOwner() {
 }
 
 
-/* =====================================================
-   OWNER PANEL SCHLIESSEN
-===================================================== */
+/* ================================================= */
+/* OWNER PANEL ÖFFNEN */
+/* ================================================= */
 
-function closeOwnerPanel() {
+function openOwnerPanel() {
 
-    ownerPanel.classList.remove("show");
+    const panel =
+        document.getElementById("ownerPanel");
+
+    panel.classList.add("show");
+
+    loadOwnerSettings();
 
 }
 
 
-/* =====================================================
-   LOGOUT
-===================================================== */
+/* ================================================= */
+/* OWNER LOGOUT */
+/* ================================================= */
 
 function logoutOwner() {
 
-    ownerPanel.classList.remove("show");
-
-}
-
-
-/* =====================================================
-   DATEN SPEICHERN
-===================================================== */
-
-function saveData() {
-
-    localStorage.setItem(
-        "minecraftWebsiteData",
-        JSON.stringify(websiteData)
+    localStorage.removeItem(
+        "ownerLoggedIn"
     );
 
+    document
+        .getElementById("ownerPanel")
+        .classList.remove("show");
+
 }
 
 
-/* =====================================================
-   SERVER DATEN
-===================================================== */
+/* ================================================= */
+/* LOGIN BEIM START PRÜFEN */
+/* ================================================= */
+
+function checkOwnerLogin() {
+
+    /*
+        Absichtlich KEIN automatisches Öffnen
+        des Owner Panels.
+
+        Der Owner klickt selbst auf
+        "Owner Login".
+    */
+
+}
+
+
+/* ================================================= */
+/* SERVER LADEN */
+/* ================================================= */
+
+function loadServer() {
+
+    const data = getData();
+
+    const server = data.server;
+
+
+    document.getElementById("serverDomain")
+        .textContent = server.domain;
+
+
+    document.getElementById("playerCount")
+        .textContent = server.players;
+
+
+    document.getElementById("serverVersion")
+        .textContent = server.version;
+
+
+    const status =
+        document.getElementById("serverStatus");
+
+    const statusText =
+        document.getElementById("serverStatusText");
+
+    const dot =
+        document.getElementById("statusDot");
+
+
+    dot.className =
+        "status-dot " + server.status;
+
+
+    if (server.status === "online") {
+
+        status.textContent =
+            "Online";
+
+        statusText.textContent =
+            "Der Server ist online und bereit.";
+
+    }
+
+
+    if (server.status === "offline") {
+
+        status.textContent =
+            "Offline";
+
+        statusText.textContent =
+            "Der Server ist momentan offline.";
+
+    }
+
+
+    if (server.status === "maintenance") {
+
+        status.textContent =
+            "Wartung";
+
+        statusText.textContent =
+            "Der Server befindet sich momentan in Wartung.";
+
+    }
+
+}
+
+
+/* ================================================= */
+/* SERVER EINSTELLUNGEN LADEN */
+/* ================================================= */
+
+function loadOwnerSettings() {
+
+    const data = getData();
+
+
+    document.getElementById("editStatus")
+        .value = data.server.status;
+
+
+    document.getElementById("editDomain")
+        .value = data.server.domain;
+
+
+    document.getElementById("editPlayers")
+        .value = data.server.players;
+
+
+    document.getElementById("editVersion")
+        .value = data.server.version;
+
+
+    document.getElementById("editDiscord")
+        .value = data.discord;
+
+
+    renderAdminYouTube();
+
+    renderAdminTikTok();
+
+    renderAdminWishes();
+
+}
+
+
+/* ================================================= */
+/* SERVER SPEICHERN */
+/* ================================================= */
 
 function saveServerSettings() {
 
-    websiteData.domain =
-        document.getElementById("adminDomain").value;
-
-    websiteData.version =
-        document.getElementById("adminVersion").value;
-
-    websiteData.players =
-        document.getElementById("adminPlayers").value;
-
-    websiteData.status =
-        document.getElementById("adminStatus").value;
+    const data = getData();
 
 
-    saveData();
+    data.server.status =
+        document.getElementById("editStatus").value;
 
-    updateWebsite();
 
-    alert("✅ Server wurde gespeichert.");
+    data.server.domain =
+        document.getElementById("editDomain").value
+        .trim();
+
+
+    data.server.players =
+        document.getElementById("editPlayers").value
+        .trim();
+
+
+    data.server.version =
+        document.getElementById("editVersion").value
+        .trim();
+
+
+    saveData(data);
+
+    loadServer();
+
+
+    alert("✅ Serverdaten wurden gespeichert.");
 
 }
 
 
-/* =====================================================
-   DISCORD
-===================================================== */
+/* ================================================= */
+/* DISCORD SPEICHERN */
+/* ================================================= */
 
 function saveDiscord() {
 
-    websiteData.discord =
-        document.getElementById("adminDiscord").value;
+    const data = getData();
 
-    saveData();
 
-    updateWebsite();
+    data.discord =
+        document.getElementById("editDiscord")
+        .value
+        .trim();
+
+
+    saveData(data);
+
+    renderSocialLinks();
+
 
     alert("✅ Discord wurde gespeichert.");
 
 }
 
 
-/* =====================================================
-   YOUTUBE HINZUFÜGEN
-===================================================== */
+/* ================================================= */
+/* YOUTUBE HINZUFÜGEN */
+/* ================================================= */
 
 function addYouTube() {
 
     const name =
-        document.getElementById("youtubeName").value.trim();
+        document
+        .getElementById("youtubeName")
+        .value
+        .trim();
+
 
     const url =
-        document.getElementById("youtubeUrl").value.trim();
+        document
+        .getElementById("youtubeURL")
+        .value
+        .trim();
 
 
     if (!name || !url) {
 
-        alert("Bitte Name und Link eingeben.");
+        alert(
+            "Bitte Kanalname und URL eingeben."
+        );
 
         return;
 
     }
 
 
-    websiteData.youtube.push({
+    const data = getData();
+
+
+    data.youtube.push({
+
         name: name,
+
         url: url
+
     });
 
 
-    document.getElementById("youtubeName").value = "";
-    document.getElementById("youtubeUrl").value = "";
+    saveData(data);
 
 
-    saveData();
+    document.getElementById("youtubeName")
+        .value = "";
 
-    updateWebsite();
+    document.getElementById("youtubeURL")
+        .value = "";
 
-    loadAdminPanel();
+
+    renderSocialLinks();
+
+    renderAdminYouTube();
 
 }
 
 
-/* =====================================================
-   YOUTUBE LÖSCHEN
-===================================================== */
+/* ================================================= */
+/* YOUTUBE LÖSCHEN */
+/* ================================================= */
 
 function deleteYouTube(index) {
 
-    websiteData.youtube.splice(index, 1);
+    const data = getData();
 
-    saveData();
+    data.youtube.splice(index, 1);
 
-    updateWebsite();
+    saveData(data);
 
-    loadAdminPanel();
+    renderSocialLinks();
+
+    renderAdminYouTube();
 
 }
 
 
-/* =====================================================
-   TIKTOK HINZUFÜGEN
-===================================================== */
+/* ================================================= */
+/* TIKTOK HINZUFÜGEN */
+/* ================================================= */
 
 function addTikTok() {
 
     const name =
-        document.getElementById("tiktokName").value.trim();
+        document
+        .getElementById("tiktokName")
+        .value
+        .trim();
+
 
     const url =
-        document.getElementById("tiktokUrl").value.trim();
+        document
+        .getElementById("tiktokURL")
+        .value
+        .trim();
 
 
     if (!name || !url) {
 
-        alert("Bitte Name und Link eingeben.");
+        alert(
+            "Bitte TikTok Name und URL eingeben."
+        );
 
         return;
 
     }
 
 
-    websiteData.tiktok.push({
+    const data = getData();
+
+
+    data.tiktok.push({
+
         name: name,
+
         url: url
+
     });
 
 
-    document.getElementById("tiktokName").value = "";
-    document.getElementById("tiktokUrl").value = "";
+    saveData(data);
 
 
-    saveData();
+    document.getElementById("tiktokName")
+        .value = "";
 
-    updateWebsite();
+    document.getElementById("tiktokURL")
+        .value = "";
 
-    loadAdminPanel();
+
+    renderSocialLinks();
+
+    renderAdminTikTok();
 
 }
 
 
-/* =====================================================
-   TIKTOK LÖSCHEN
-===================================================== */
+/* ================================================= */
+/* TIKTOK LÖSCHEN */
+/* ================================================= */
 
 function deleteTikTok(index) {
 
-    websiteData.tiktok.splice(index, 1);
+    const data = getData();
 
-    saveData();
+    data.tiktok.splice(index, 1);
 
-    updateWebsite();
+    saveData(data);
 
-    loadAdminPanel();
+    renderSocialLinks();
 
-}
-
-
-/* =====================================================
-   WEBSITE AKTUALISIEREN
-===================================================== */
-
-function updateWebsite() {
-
-    document.getElementById(
-        "serverDomain"
-    ).textContent =
-        websiteData.domain;
-
-
-    document.getElementById(
-        "serverVersion"
-    ).textContent =
-        websiteData.version;
-
-
-    document.getElementById(
-        "playerCount"
-    ).textContent =
-        websiteData.players;
-
-
-    document.getElementById(
-        "serverStatus"
-    ).textContent =
-        websiteData.status;
-
-
-    document.getElementById(
-        "discordLink"
-    ).href =
-        websiteData.discord;
-
-
-    updateStatus();
-
-    updateYouTube();
-
-    updateTikTok();
-
-    updateWishes();
+    renderAdminTikTok();
 
 }
 
 
-/* =====================================================
-   SERVER STATUS
-===================================================== */
+/* ================================================= */
+/* SOCIAL MEDIA ANZEIGEN */
+/* ================================================= */
 
-function updateStatus() {
+function renderSocialLinks() {
 
-    const circle =
-        document.getElementById("statusCircle");
+    const data = getData();
 
-
-    if (websiteData.status === "ONLINE") {
-
-        circle.style.background = "#18e56b";
-
-        circle.style.boxShadow =
-            "0 0 20px #18e56b";
-
-    }
+    const container =
+        document.getElementById("socialLinks");
 
 
-    if (websiteData.status === "OFFLINE") {
-
-        circle.style.background = "#ff3344";
-
-        circle.style.boxShadow =
-            "0 0 20px #ff3344";
-
-    }
+    container.innerHTML = "";
 
 
-    if (websiteData.status === "WARTUNG") {
+    /* DISCORD */
 
-        circle.style.background = "#ffc400";
+    if (data.discord) {
 
-        circle.style.boxShadow =
-            "0 0 20px #ffc400";
-
-    }
-
-}
-
-
-/* =====================================================
-   YOUTUBE
-===================================================== */
-
-function updateYouTube() {
-
-    const list =
-        document.getElementById("youtubeList");
-
-    list.innerHTML = "";
-
-
-    websiteData.youtube.forEach(function(channel) {
-
-        const a =
+        const card =
             document.createElement("a");
 
-        a.className = "channel";
+        card.className =
+            "social-card";
 
-        a.href = channel.url;
+        card.href =
+            data.discord;
 
-        a.target = "_blank";
+        card.target =
+            "_blank";
 
-        a.textContent =
-            "▶️ " + channel.name + " →";
+        card.rel =
+            "noopener noreferrer";
 
-        list.appendChild(a);
+
+        card.innerHTML = `
+            <div class="icon">💬</div>
+            <h3>Discord</h3>
+            <p>Unsere Community</p>
+        `;
+
+
+        container.appendChild(card);
+
+    }
+
+
+    /* YOUTUBE */
+
+    data.youtube.forEach(channel => {
+
+        const card =
+            document.createElement("a");
+
+        card.className =
+            "social-card";
+
+        card.href =
+            channel.url;
+
+        card.target =
+            "_blank";
+
+        card.rel =
+            "noopener noreferrer";
+
+
+        card.innerHTML = `
+            <div class="icon">▶️</div>
+            <h3>${escapeHTML(channel.name)}</h3>
+            <p>YouTube Kanal</p>
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+
+    /* TIKTOK */
+
+    data.tiktok.forEach(channel => {
+
+        const card =
+            document.createElement("a");
+
+        card.className =
+            "social-card";
+
+        card.href =
+            channel.url;
+
+        card.target =
+            "_blank";
+
+        card.rel =
+            "noopener noreferrer";
+
+
+        card.innerHTML = `
+            <div class="icon">🎵</div>
+            <h3>${escapeHTML(channel.name)}</h3>
+            <p>TikTok Kanal</p>
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+
+    if (!data.discord &&
+        data.youtube.length === 0 &&
+        data.tiktok.length === 0) {
+
+        container.innerHTML = `
+            <div class="social-card">
+                <div class="icon">📱</div>
+                <h3>Noch keine Kanäle</h3>
+                <p>
+                    Der Owner kann hier YouTube,
+                    TikTok und Discord hinzufügen.
+                </p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ================================================= */
+/* ADMIN YOUTUBE LISTE */
+/* ================================================= */
+
+function renderAdminYouTube() {
+
+    const data = getData();
+
+    const container =
+        document.getElementById("youtubeAdminList");
+
+
+    container.innerHTML = "";
+
+
+    data.youtube.forEach((channel, index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "admin-item";
+
+
+        item.innerHTML = `
+            <span>
+                ▶️ ${escapeHTML(channel.name)}
+            </span>
+
+            <button
+                onclick="deleteYouTube(${index})">
+                Löschen
+            </button>
+        `;
+
+
+        container.appendChild(item);
 
     });
 
 }
 
 
-/* =====================================================
-   TIKTOK
-===================================================== */
+/* ================================================= */
+/* ADMIN TIKTOK LISTE */
+/* ================================================= */
 
-function updateTikTok() {
+function renderAdminTikTok() {
 
-    const list =
-        document.getElementById("tiktokList");
+    const data = getData();
 
-    list.innerHTML = "";
+    const container =
+        document.getElementById("tiktokAdminList");
 
 
-    websiteData.tiktok.forEach(function(channel) {
+    container.innerHTML = "";
 
-        const a =
-            document.createElement("a");
 
-        a.className = "channel";
+    data.tiktok.forEach((channel, index) => {
 
-        a.href = channel.url;
+        const item =
+            document.createElement("div");
 
-        a.target = "_blank";
+        item.className =
+            "admin-item";
 
-        a.textContent =
-            "🎵 " + channel.name + " →";
 
-        list.appendChild(a);
+        item.innerHTML = `
+            <span>
+                🎵 ${escapeHTML(channel.name)}
+            </span>
+
+            <button
+                onclick="deleteTikTok(${index})">
+                Löschen
+            </button>
+        `;
+
+
+        container.appendChild(item);
 
     });
 
 }
 
 
-/* =====================================================
-   WUNSCH ABSENDEN
-===================================================== */
+/* ================================================= */
+/* WUNSCH EINREICHEN */
+/* ================================================= */
 
-document
-    .getElementById("wishForm")
-    .addEventListener("submit", function(event) {
+function submitWish() {
 
-        event.preventDefault();
-
-
-        const name =
-            document
-                .getElementById("wishName")
-                .value
-                .trim();
-
-
-        const wish =
-            document
-                .getElementById("wishText")
-                .value
-                .trim();
-
-
-        if (!name || !wish) {
-
-            return;
-
-        }
-
-
-        websiteData.wishes.push({
-
-            name: name,
-
-            wish: wish,
-
-            date:
-                new Date().toLocaleDateString("de-DE")
-
-        });
-
-
-        saveData();
-
-        updateWebsite();
-
-
+    const name =
         document
-            .getElementById("wishName")
-            .value = "";
+        .getElementById("wishName")
+        .value
+        .trim();
 
 
+    const category =
         document
-            .getElementById("wishText")
-            .value = "";
+        .getElementById("wishCategory")
+        .value;
 
+
+    const text =
+        document
+        .getElementById("wishText")
+        .value
+        .trim();
+
+
+    if (!name || !text) {
 
         alert(
-            "✅ Dein Wunsch wurde gespeichert!"
+            "Bitte Minecraft-Name und Wunsch eingeben."
         );
+
+        return;
+
+    }
+
+
+    const data = getData();
+
+
+    data.wishes.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        category: category,
+
+        text: text,
+
+        date:
+            new Date().toLocaleString("de-DE")
 
     });
 
 
-/* =====================================================
-   WÜNSCHE ANZEIGEN
-===================================================== */
-
-function updateWishes() {
-
-    const list =
-        document.getElementById("wishList");
-
-    list.innerHTML = "";
+    saveData(data);
 
 
-    if (websiteData.wishes.length === 0) {
+    document.getElementById("wishName")
+        .value = "";
 
-        list.innerHTML =
-            '<div class="wish">' +
-            'Noch keine Wünsche vorhanden.' +
-            '</div>';
+    document.getElementById("wishText")
+        .value = "";
+
+
+    updateWishCount();
+
+    alert(
+        "⭐ Dein Wunsch wurde eingereicht!"
+    );
+
+}
+
+
+/* ================================================= */
+/* WUNSCH COUNT */
+/* ================================================= */
+
+function updateWishCount() {
+
+    const data = getData();
+
+
+    document.getElementById("wishCount")
+        .textContent =
+        data.wishes.length;
+
+}
+
+
+/* ================================================= */
+/* OWNER WÜNSCHE */
+/* ================================================= */
+
+function renderAdminWishes() {
+
+    const data = getData();
+
+
+    const container =
+        document.getElementById("adminWishes");
+
+
+    container.innerHTML = "";
+
+
+    if (data.wishes.length === 0) {
+
+        container.innerHTML = `
+            <p style="color:#9aa9b6;">
+                Noch keine Wünsche vorhanden.
+            </p>
+        `;
 
         return;
 
     }
 
 
-    websiteData.wishes
+    data.wishes
         .slice()
         .reverse()
-        .forEach(function(item) {
+        .forEach(wish => {
 
-            const div =
+            const item =
                 document.createElement("div");
 
-            div.className = "wish";
+            item.className =
+                "wish-admin-item";
 
 
-            const strong =
-                document.createElement("strong");
-
-            strong.textContent =
-                item.name;
-
-
-            const span =
-                document.createElement("span");
-
-            span.textContent =
-                item.wish +
-                " • " +
-                item.date;
-
-
-            div.appendChild(strong);
-
-            div.appendChild(span);
-
-            list.appendChild(div);
-
-        });
-
-}
-
-
-/* =====================================================
-   OWNER PANEL LADEN
-===================================================== */
-
-function loadAdminPanel() {
-
-    document.getElementById(
-        "adminDomain"
-    ).value =
-        websiteData.domain;
-
-
-    document.getElementById(
-        "adminVersion"
-    ).value =
-        websiteData.version;
-
-
-    document.getElementById(
-        "adminPlayers"
-    ).value =
-        websiteData.players;
-
-
-    document.getElementById(
-        "adminStatus"
-    ).value =
-        websiteData.status;
-
-
-    document.getElementById(
-        "adminDiscord"
-    ).value =
-        websiteData.discord;
-
-
-    loadAdminYouTube();
-
-    loadAdminTikTok();
-
-    loadAdminWishes();
-
-}
-
-
-/* =====================================================
-   ADMIN YOUTUBE
-===================================================== */
-
-function loadAdminYouTube() {
-
-    const list =
-        document.getElementById(
-            "adminYoutubeList"
-        );
-
-    list.innerHTML = "";
-
-
-    websiteData.youtube.forEach(
-        function(channel, index) {
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "admin-item";
-
-
-            div.innerHTML =
-                `
-                <span>
-                    ▶️ ${escapeHTML(channel.name)}
-                </span>
-
-                <button
-                    class="delete-button"
-                    onclick="deleteYouTube(${index})">
-
-                    Löschen
-
-                </button>
-                `;
-
-
-            list.appendChild(div);
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   ADMIN TIKTOK
-===================================================== */
-
-function loadAdminTikTok() {
-
-    const list =
-        document.getElementById(
-            "adminTiktokList"
-        );
-
-    list.innerHTML = "";
-
-
-    websiteData.tiktok.forEach(
-        function(channel, index) {
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "admin-item";
-
-
-            div.innerHTML =
-                `
-                <span>
-                    🎵 ${escapeHTML(channel.name)}
-                </span>
-
-                <button
-                    class="delete-button"
-                    onclick="deleteTikTok(${index})">
-
-                    Löschen
-
-                </button>
-                `;
-
-
-            list.appendChild(div);
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   ADMIN WÜNSCHE
-===================================================== */
-
-function loadAdminWishes() {
-
-    const list =
-        document.getElementById(
-            "adminWishList"
-        );
-
-    list.innerHTML = "";
-
-
-    if (websiteData.wishes.length === 0) {
-
-        list.innerHTML =
-            "<p>Noch keine Wünsche.</p>";
-
-        return;
-
-    }
-
-
-    websiteData.wishes
-        .slice()
-        .reverse()
-        .forEach(function(item, reversedIndex) {
-
-            const realIndex =
-                websiteData.wishes.length -
-                1 -
-                reversedIndex;
-
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "admin-wish";
-
-
-            div.innerHTML =
-                `
+            item.innerHTML = `
                 <strong>
-                    ${escapeHTML(item.name)}
+                    ⭐ ${escapeHTML(wish.name)}
                 </strong>
 
-                <p>
-                    ${escapeHTML(item.wish)}
-                </p>
-
                 <small>
-                    ${escapeHTML(item.date)}
+                    ${escapeHTML(wish.category)}
+                    ·
+                    ${escapeHTML(wish.date)}
                 </small>
 
-                <br>
+                <p>
+                    ${escapeHTML(wish.text)}
+                </p>
 
                 <button
-                    onclick="deleteWish(${realIndex})">
-
+                    onclick="deleteWish(${wish.id})">
                     Wunsch löschen
-
                 </button>
-                `;
+            `;
 
 
-            list.appendChild(div);
+            container.appendChild(item);
 
         });
 
 }
 
 
-/* =====================================================
-   WUNSCH LÖSCHEN
-===================================================== */
+/* ================================================= */
+/* WUNSCH LÖSCHEN */
+/* ================================================= */
 
-function deleteWish(index) {
+function deleteWish(id) {
 
-    websiteData.wishes.splice(index, 1);
+    const data = getData();
 
-    saveData();
 
-    updateWebsite();
+    data.wishes =
+        data.wishes.filter(
+            wish => wish.id !== id
+        );
 
-    loadAdminPanel();
+
+    saveData(data);
+
+
+    renderAdminWishes();
+
+    updateWishCount();
 
 }
 
 
-/* =====================================================
-   HTML SICHER MACHEN
-===================================================== */
+/* ================================================= */
+/* SERVER IP KOPIEREN */
+/* ================================================= */
 
-function escapeHTML(text) {
+function copyServerIP() {
 
-    return String(text)
+    const data = getData();
+
+    const domain =
+        data.server.domain;
+
+
+    navigator.clipboard
+        .writeText(domain)
+        .then(() => {
+
+            alert(
+                "📋 Server-Adresse kopiert!"
+            );
+
+        })
+        .catch(() => {
+
+            alert(
+                "Server-Adresse: " + domain
+            );
+
+        });
+
+}
+
+
+/* ================================================= */
+/* HTML SICHER DARSTELLEN */
+/* ================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+
         .replaceAll("&", "&amp;")
+
         .replaceAll("<", "&lt;")
+
         .replaceAll(">", "&gt;")
+
         .replaceAll('"', "&quot;")
+
         .replaceAll("'", "&#039;");
 
 }
 
 
-/* =====================================================
-   SERVER-IP KOPIEREN
-===================================================== */
+/* ================================================= */
+/* JAHR */
+/* ================================================= */
 
-function copyServerIP() {
+function setYear() {
 
-    navigator.clipboard.writeText(
-        websiteData.domain
-    );
-
-    alert(
-        "📋 Server-Adresse kopiert!"
-    );
+    document.getElementById("year")
+        .textContent =
+        new Date().getFullYear();
 
 }
 
 
-/* =====================================================
-   START
-===================================================== */
+/* ================================================= */
+/* START */
+/* ================================================= */
 
-updateWebsite();
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadServer();
+
+        renderSocialLinks();
+
+        updateWishCount();
+
+        setYear();
+
+        checkOwnerLogin();
+
+    }
+);
