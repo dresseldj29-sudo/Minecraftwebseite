@@ -1,27 +1,32 @@
-/* =====================================================
+/* =========================================================
    MINECRAFT SERVER WEBSEITE
-   OWNER PANEL
-===================================================== */
+   KOMPLETTES OWNER SYSTEM
+   ========================================================= */
 
 
-/* =====================================================
-   OWNER LOGIN
+/* =========================================================
+   🔐 OWNER LOGIN DATEN
+   =========================================================
 
-   HIER DEINE TEST-DATEN EINTRAGEN.
+   HIER TRÄGST DU DEINE LOGIN-DATEN EIN.
 
-   WICHTIG:
-   GitHub Pages macht diesen Code öffentlich.
-   Deshalb KEIN wichtiges echtes Passwort verwenden.
-===================================================== */
+   Beispiel:
 
-const OWNER_EMAIL = "ServerOwner@gmail.com";
+   const OWNER_EMAIL = "deineemail@gmail.com";
+   const OWNER_PASSWORD = "DeinPasswort123";
 
-const OWNER_PASSWORD = "Server";
+   ⚠️ NICHT dein echtes Gmail-Passwort benutzen.
+   GitHub Pages kann JavaScript öffentlich anzeigen.
+========================================================= */
+
+const OWNER_EMAIL = "deineemail@gmail.com";
+
+const OWNER_PASSWORD = "DeinPasswort123";
 
 
-/* =====================================================
-   STANDARD DATEN
-===================================================== */
+/* =========================================================
+   STANDARD WEBSEITEN-DATEN
+========================================================= */
 
 const defaultData = {
 
@@ -61,47 +66,107 @@ const defaultData = {
 };
 
 
-/* =====================================================
+/* =========================================================
    DATEN LADEN
-===================================================== */
+========================================================= */
 
-let data;
+let data = loadData();
 
-try {
 
-    data =
-        JSON.parse(
+function loadData() {
+
+    try {
+
+        const saved =
             localStorage.getItem(
                 "minecraftServerWebsite"
-            )
-        )
-        || defaultData;
+            );
+
+        if (saved) {
+
+            const parsed =
+                JSON.parse(saved);
+
+            return {
+
+                ...defaultData,
+
+                ...parsed,
+
+                social:
+                    Array.isArray(parsed.social)
+                        ? parsed.social
+                        : defaultData.social,
+
+                wishes:
+                    Array.isArray(parsed.wishes)
+                        ? parsed.wishes
+                        : []
+
+            };
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Fehler beim Laden der Daten:",
+            error
+        );
+
+    }
+
+
+    return {
+
+        ...defaultData,
+
+        social:
+            [...defaultData.social],
+
+        wishes: []
+
+    };
 
 }
-catch {
-
-    data = defaultData;
-
-}
 
 
-/* =====================================================
+/* =========================================================
    DATEN SPEICHERN
-===================================================== */
+========================================================= */
 
 function saveData() {
 
-    localStorage.setItem(
-        "minecraftServerWebsite",
-        JSON.stringify(data)
-    );
+    try {
+
+        localStorage.setItem(
+            "minecraftServerWebsite",
+            JSON.stringify(data)
+        );
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Fehler beim Speichern:",
+            error
+        );
+
+        return false;
+
+    }
 
 }
 
 
-/* =====================================================
-   START
-===================================================== */
+/* =========================================================
+   SEITE STARTEN
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -115,23 +180,21 @@ document.addEventListener(
 
         loadWishlist();
 
+        setupLoginEvents();
+
     }
 );
 
 
-/* =====================================================
+/* =========================================================
    WEBSITE AKTUALISIEREN
-===================================================== */
+========================================================= */
 
 function updateWebsite() {
 
-    document.getElementById(
-        "serverDomain"
-    ).textContent = data.domain;
+    updateDomain();
 
-    document.getElementById(
-        "playerCount"
-    ).textContent = data.players;
+    updatePlayerCount();
 
     updateStatus();
 
@@ -140,9 +203,49 @@ function updateWebsite() {
 }
 
 
-/* =====================================================
-   SERVERSTATUS
-===================================================== */
+/* =========================================================
+   DOMAIN
+========================================================= */
+
+function updateDomain() {
+
+    const domain =
+        document.getElementById(
+            "serverDomain"
+        );
+
+    if (!domain) return;
+
+
+    domain.textContent =
+        data.domain || "play.deinserver.de";
+
+}
+
+
+/* =========================================================
+   SPIELERANZAHL
+========================================================= */
+
+function updatePlayerCount() {
+
+    const playerCount =
+        document.getElementById(
+            "playerCount"
+        );
+
+    if (!playerCount) return;
+
+
+    playerCount.textContent =
+        Number(data.players) || 0;
+
+}
+
+
+/* =========================================================
+   SERVER STATUS
+========================================================= */
 
 function updateStatus() {
 
@@ -162,6 +265,17 @@ function updateStatus() {
         );
 
 
+    if (
+        !icon ||
+        !title ||
+        !description
+    ) {
+
+        return;
+
+    }
+
+
     if (data.status === "online") {
 
         icon.textContent = "🟢";
@@ -174,8 +288,9 @@ function updateStatus() {
 
     }
 
-
-    else if (data.status === "offline") {
+    else if (
+        data.status === "offline"
+    ) {
 
         icon.textContent = "🔴";
 
@@ -186,7 +301,6 @@ function updateStatus() {
             "Der Minecraft Server ist momentan nicht erreichbar.";
 
     }
-
 
     else {
 
@@ -203,9 +317,9 @@ function updateStatus() {
 }
 
 
-/* =====================================================
-   SOCIAL LINKS ANZEIGEN
-===================================================== */
+/* =========================================================
+   SOCIAL MEDIA ANZEIGEN
+========================================================= */
 
 function updateSocial() {
 
@@ -215,12 +329,44 @@ function updateSocial() {
         );
 
 
+    if (!container) return;
+
+
     container.innerHTML = "";
+
+
+    if (
+        !Array.isArray(data.social) ||
+        data.social.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="social-card">
+
+                <div class="social-icon">
+                    🔗
+                </div>
+
+                <h3>
+                    Keine Kanäle
+                </h3>
+
+                <p>
+                    Der Owner hat noch keine Kanäle eingetragen.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
 
 
     data.social.forEach(
         function (social) {
-
 
             let icon = "🔗";
 
@@ -233,8 +379,7 @@ function updateSocial() {
 
             }
 
-
-            if (
+            else if (
                 social.type === "TikTok"
             ) {
 
@@ -242,8 +387,7 @@ function updateSocial() {
 
             }
 
-
-            if (
+            else if (
                 social.type === "Discord"
             ) {
 
@@ -263,7 +407,7 @@ function updateSocial() {
 
 
             card.href =
-                social.url;
+                social.url || "#";
 
 
             card.target =
@@ -282,13 +426,13 @@ function updateSocial() {
 
                 <h3>
                     ${escapeHTML(
-                        social.title
+                        social.title || social.type
                     )}
                 </h3>
 
                 <p>
                     ${escapeHTML(
-                        social.description
+                        social.description || ""
                     )}
                 </p>
 
@@ -303,104 +447,183 @@ function updateSocial() {
 }
 
 
-/* =====================================================
+/* =========================================================
    DOMAIN KOPIEREN
-===================================================== */
+========================================================= */
 
 function copyDomain() {
 
-    navigator.clipboard
-        .writeText(data.domain)
-        .then(
-            function () {
+    const domain =
+        data.domain || "play.deinserver.de";
 
-                alert(
-                    "✅ Server-Domain kopiert!"
-                );
 
-            }
-        )
-        .catch(
-            function () {
+    if (
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+    ) {
 
-                alert(
-                    "Domain: " +
-                    data.domain
-                );
+        navigator.clipboard
+            .writeText(domain)
+            .then(
+                function () {
 
-            }
+                    showMessage(
+                        "✅ Server-Domain kopiert!"
+                    );
+
+                }
+            )
+            .catch(
+                function () {
+
+                    alert(
+                        "Server-Domain:\n\n" +
+                        domain
+                    );
+
+                }
+            );
+
+    }
+
+    else {
+
+        alert(
+            "Server-Domain:\n\n" +
+            domain
         );
+
+    }
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   🔐 LOGIN SYSTEM
+========================================================= */
+
+
+/* ---------------------------------------------------------
    LOGIN ÖFFNEN
-===================================================== */
+--------------------------------------------------------- */
 
 function openLogin() {
 
-    document
-        .getElementById(
+    const overlay =
+        document.getElementById(
             "loginOverlay"
-        )
-        .classList.add("active");
+        );
+
+
+    if (!overlay) {
+
+        console.error(
+            "loginOverlay wurde nicht gefunden!"
+        );
+
+        return;
+
+    }
+
+
+    overlay.classList.add(
+        "active"
+    );
+
+
+    const email =
+        document.getElementById(
+            "ownerEmail"
+        );
+
+
+    const password =
+        document.getElementById(
+            "ownerPassword"
+        );
+
+
+    const error =
+        document.getElementById(
+            "loginError"
+        );
+
+
+    if (error) {
+
+        error.textContent = "";
+
+    }
+
+
+    if (email) {
+
+        email.value = "";
+
+    }
+
+
+    if (password) {
+
+        password.value = "";
+
+    }
 
 
     setTimeout(
         function () {
 
-            document
-                .getElementById(
-                    "ownerEmail"
-                )
-                .focus();
+            if (email) {
+
+                email.focus();
+
+            }
 
         },
-        100
+        150
     );
 
 }
 
 
-/* =====================================================
+/* ---------------------------------------------------------
    LOGIN SCHLIESSEN
-===================================================== */
+--------------------------------------------------------- */
 
 function closeLogin() {
 
-    document
-        .getElementById(
+    const overlay =
+        document.getElementById(
             "loginOverlay"
-        )
-        .classList.remove(
-            "active"
         );
+
+
+    if (!overlay) return;
+
+
+    overlay.classList.remove(
+        "active"
+    );
 
 }
 
 
-/* =====================================================
+/* ---------------------------------------------------------
    OWNER LOGIN
-===================================================== */
+--------------------------------------------------------- */
 
 function ownerLogin() {
 
-    const email =
-        document
-            .getElementById(
-                "ownerEmail"
-            )
-            .value
-            .trim();
+    const emailInput =
+        document.getElementById(
+            "ownerEmail"
+        );
 
 
-    const password =
-        document
-            .getElementById(
-                "ownerPassword"
-            )
-            .value;
+    const passwordInput =
+        document.getElementById(
+            "ownerPassword"
+        );
 
 
     const error =
@@ -410,127 +633,391 @@ function ownerLogin() {
 
 
     if (
-        email === OWNER_EMAIL &&
-        password === OWNER_PASSWORD
+        !emailInput ||
+        !passwordInput
     ) {
 
-        error.textContent = "";
+        console.error(
+            "Login-Felder fehlen!"
+        );
+
+        return;
+
+    }
+
+
+    const enteredEmail =
+        emailInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const enteredPassword =
+        passwordInput.value;
+
+
+    const correctEmail =
+        String(
+            OWNER_EMAIL
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const correctPassword =
+        String(
+            OWNER_PASSWORD
+        );
+
+
+    if (
+        enteredEmail === correctEmail &&
+        enteredPassword === correctPassword
+    ) {
+
+        if (error) {
+
+            error.textContent = "";
+
+        }
+
+
+        /* Login merken */
+
+        sessionStorage.setItem(
+            "ownerLoggedIn",
+            "true"
+        );
 
 
         closeLogin();
 
-
-        document
-            .getElementById(
-                "ownerPanel"
-            )
-            .classList.add(
-                "active"
-            );
-
-
-        loadOwnerFields();
-
-        loadAdminSocial();
-
-        loadWishlist();
+        openOwnerPanel();
 
     }
 
     else {
 
-        error.textContent =
-            "❌ E-Mail oder Passwort falsch.";
+        if (error) {
 
-    }
-
-}
-
-
-/* =====================================================
-   ENTER BEIM LOGIN
-===================================================== */
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (
-            event.key === "Enter" &&
-            document
-                .getElementById(
-                    "loginOverlay"
-                )
-                .classList.contains(
-                    "active"
-                )
-        ) {
-
-            ownerLogin();
+            error.innerHTML =
+                "❌ E-Mail oder Passwort ist falsch.";
 
         }
 
+
+        passwordInput.value = "";
+
+        passwordInput.focus();
+
     }
-);
-
-
-/* =====================================================
-   OWNER FELDER LADEN
-===================================================== */
-
-function loadOwnerFields() {
-
-    document.getElementById(
-        "domainInput"
-    ).value = data.domain;
-
-
-    document.getElementById(
-        "statusInput"
-    ).value = data.status;
-
-
-    document.getElementById(
-        "playersInput"
-    ).value = data.players;
 
 }
 
 
-/* =====================================================
+/* ---------------------------------------------------------
+   OWNER PANEL ÖFFNEN
+--------------------------------------------------------- */
+
+function openOwnerPanel() {
+
+    const panel =
+        document.getElementById(
+            "ownerPanel"
+        );
+
+
+    if (!panel) {
+
+        console.error(
+            "ownerPanel wurde nicht gefunden!"
+        );
+
+        return;
+
+    }
+
+
+    panel.classList.add(
+        "active"
+    );
+
+
+    loadOwnerFields();
+
+    loadAdminSocial();
+
+    loadWishlist();
+
+}
+
+
+/* ---------------------------------------------------------
+   OWNER PANEL SCHLIESSEN
+--------------------------------------------------------- */
+
+function closeOwnerPanel() {
+
+    const panel =
+        document.getElementById(
+            "ownerPanel"
+        );
+
+
+    if (!panel) return;
+
+
+    panel.classList.remove(
+        "active"
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   LOGOUT
+--------------------------------------------------------- */
+
+function ownerLogout() {
+
+    sessionStorage.removeItem(
+        "ownerLoggedIn"
+    );
+
+
+    closeOwnerPanel();
+
+
+    showMessage(
+        "Du wurdest ausgeloggt."
+    );
+
+}
+
+
+/* =========================================================
+   LOGIN EVENTS
+========================================================= */
+
+function setupLoginEvents() {
+
+
+    /* Enter-Taste */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                const overlay =
+                    document.getElementById(
+                        "loginOverlay"
+                    );
+
+
+                if (
+                    overlay &&
+                    overlay.classList.contains(
+                        "active"
+                    )
+                ) {
+
+                    ownerLogin();
+
+                }
+
+            }
+
+
+            /* ESC */
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                const overlay =
+                    document.getElementById(
+                        "loginOverlay"
+                    );
+
+
+                if (
+                    overlay &&
+                    overlay.classList.contains(
+                        "active"
+                    )
+                ) {
+
+                    closeLogin();
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* Klick auf dunklen Hintergrund */
+
+    const overlay =
+        document.getElementById(
+            "loginOverlay"
+        );
+
+
+    if (overlay) {
+
+        overlay.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target === overlay
+                ) {
+
+                    closeLogin();
+
+                }
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   OWNER FELDER LADEN
+========================================================= */
+
+function loadOwnerFields() {
+
+    const domainInput =
+        document.getElementById(
+            "domainInput"
+        );
+
+
+    const statusInput =
+        document.getElementById(
+            "statusInput"
+        );
+
+
+    const playersInput =
+        document.getElementById(
+            "playersInput"
+        );
+
+
+    if (domainInput) {
+
+        domainInput.value =
+            data.domain || "";
+
+    }
+
+
+    if (statusInput) {
+
+        statusInput.value =
+            data.status || "online";
+
+    }
+
+
+    if (playersInput) {
+
+        playersInput.value =
+            Number(data.players) || 0;
+
+    }
+
+}
+
+
+/* =========================================================
    SERVER SPEICHERN
-===================================================== */
+========================================================= */
 
 function saveServer() {
 
+    const domainInput =
+        document.getElementById(
+            "domainInput"
+        );
+
+
+    const statusInput =
+        document.getElementById(
+            "statusInput"
+        );
+
+
+    const playersInput =
+        document.getElementById(
+            "playersInput"
+        );
+
+
+    if (
+        !domainInput ||
+        !statusInput ||
+        !playersInput
+    ) {
+
+        alert(
+            "❌ Server-Felder wurden nicht gefunden."
+        );
+
+        return;
+
+    }
+
+
+    let domain =
+        domainInput.value.trim();
+
+
+    if (!domain) {
+
+        domain =
+            "play.deinserver.de";
+
+    }
+
+
+    let players =
+        Number(
+            playersInput.value
+        );
+
+
+    if (
+        !Number.isFinite(players) ||
+        players < 0
+    ) {
+
+        players = 0;
+
+    }
+
+
     data.domain =
-        document
-            .getElementById(
-                "domainInput"
-            )
-            .value
-            .trim();
+        domain;
 
 
     data.status =
-        document
-            .getElementById(
-                "statusInput"
-            )
-            .value;
+        statusInput.value;
 
 
     data.players =
-        Math.max(
-            0,
-            Number(
-                document
-                    .getElementById(
-                        "playersInput"
-                    )
-                    .value
-            ) || 0
-        );
+        Math.floor(players);
 
 
     saveData();
@@ -538,16 +1025,16 @@ function saveServer() {
     updateWebsite();
 
 
-    alert(
-        "✅ Server gespeichert!"
+    showMessage(
+        "✅ Server-Einstellungen gespeichert!"
     );
 
 }
 
 
-/* =====================================================
-   SOCIAL ADMIN LADEN
-===================================================== */
+/* =========================================================
+   SOCIAL ADMIN
+========================================================= */
 
 function loadAdminSocial() {
 
@@ -555,6 +1042,9 @@ function loadAdminSocial() {
         document.getElementById(
             "adminSocialList"
         );
+
+
+    if (!container) return;
 
 
     container.innerHTML = "";
@@ -574,9 +1064,9 @@ function loadAdminSocial() {
 }
 
 
-/* =====================================================
+/* =========================================================
    SOCIAL ADMIN ZEILE
-===================================================== */
+========================================================= */
 
 function createSocialAdminRow(
     social,
@@ -589,6 +1079,9 @@ function createSocialAdminRow(
         );
 
 
+    if (!container) return;
+
+
     const row =
         document.createElement(
             "div"
@@ -599,64 +1092,102 @@ function createSocialAdminRow(
         "social-admin-row";
 
 
-    row.innerHTML = `
-
-        <select>
-
-            <option ${
-                social.type === "YouTube"
-                ? "selected"
-                : ""
-            }>
-                YouTube
-            </option>
-
-            <option ${
-                social.type === "TikTok"
-                ? "selected"
-                : ""
-            }>
-                TikTok
-            </option>
-
-            <option ${
-                social.type === "Discord"
-                ? "selected"
-                : ""
-            }>
-                Discord
-            </option>
-
-        </select>
+    const select =
+        document.createElement(
+            "select"
+        );
 
 
-        <input
-            type="url"
-            value="${escapeAttribute(
-                social.url
-            )}"
-            placeholder="Link">
+    select.innerHTML = `
 
+        <option value="YouTube">
+            YouTube
+        </option>
 
-        <button
-            class="remove-social"
-            onclick="removeSocial(${index})">
+        <option value="TikTok">
+            TikTok
+        </option>
 
-            ×
-
-        </button>
+        <option value="Discord">
+            Discord
+        </option>
 
     `;
 
 
-    container.appendChild(row);
+    select.value =
+        social.type || "YouTube";
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "url";
+
+
+    input.value =
+        social.url || "";
+
+
+    input.placeholder =
+        "https://...";
+
+
+    const remove =
+        document.createElement(
+            "button"
+        );
+
+
+    remove.className =
+        "remove-social";
+
+
+    remove.textContent =
+        "×";
+
+
+    remove.type =
+        "button";
+
+
+    remove.onclick =
+        function () {
+
+            removeSocial(index);
+
+        };
+
+
+    row.appendChild(
+        select
+    );
+
+
+    row.appendChild(
+        input
+    );
+
+
+    row.appendChild(
+        remove
+    );
+
+
+    container.appendChild(
+        row
+    );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    SOCIAL LINK HINZUFÜGEN
-===================================================== */
+========================================================= */
 
 function addSocialLink() {
 
@@ -664,11 +1195,12 @@ function addSocialLink() {
 
         type: "YouTube",
 
-        url: "https://youtube.com/",
+        url: "",
 
-        title: "Neuer Kanal",
+        title: "YouTube",
 
-        description: "Unser Kanal"
+        description:
+            "Unser YouTube Kanal"
 
     });
 
@@ -678,16 +1210,15 @@ function addSocialLink() {
 }
 
 
-/* =====================================================
+/* =========================================================
    SOCIAL LINK LÖSCHEN
-===================================================== */
+========================================================= */
 
 function removeSocial(index) {
 
     if (
-        !confirm(
-            "Diesen Kanal wirklich löschen?"
-        )
+        index < 0 ||
+        index >= data.social.length
     ) {
 
         return;
@@ -706,9 +1237,9 @@ function removeSocial(index) {
 }
 
 
-/* =====================================================
+/* =========================================================
    SOCIAL LINKS SPEICHERN
-===================================================== */
+========================================================= */
 
 function saveSocialLinks() {
 
@@ -736,12 +1267,29 @@ function saveSocialLinks() {
                 );
 
 
+            if (
+                !select ||
+                !input
+            ) {
+
+                return;
+
+            }
+
+
             const type =
                 select.value;
 
 
             const url =
                 input.value.trim();
+
+
+            if (!url) {
+
+                return;
+
+            }
 
 
             let title =
@@ -754,9 +1302,12 @@ function saveSocialLinks() {
                 " Kanal";
 
 
-            if (type === "YouTube") {
+            if (
+                type === "YouTube"
+            ) {
 
-                title = "YouTube";
+                title =
+                    "YouTube";
 
                 description =
                     "Unsere YouTube Videos";
@@ -764,9 +1315,12 @@ function saveSocialLinks() {
             }
 
 
-            if (type === "TikTok") {
+            else if (
+                type === "TikTok"
+            ) {
 
-                title = "TikTok";
+                title =
+                    "TikTok";
 
                 description =
                     "Unsere TikTok Videos";
@@ -774,9 +1328,12 @@ function saveSocialLinks() {
             }
 
 
-            if (type === "Discord") {
+            else if (
+                type === "Discord"
+            ) {
 
-                title = "Discord";
+                title =
+                    "Discord";
 
                 description =
                     "Unsere Discord Community";
@@ -784,21 +1341,21 @@ function saveSocialLinks() {
             }
 
 
-            if (url) {
+            newSocial.push({
 
-                newSocial.push({
+                type:
+                    type,
 
-                    type: type,
+                url:
+                    url,
 
-                    url: url,
+                title:
+                    title,
 
-                    title: title,
+                description:
+                    description
 
-                    description: description
-
-                });
-
-            }
+            });
 
         }
     );
@@ -813,22 +1370,29 @@ function saveSocialLinks() {
     updateSocial();
 
 
-    alert(
-        "✅ Social-Media-Links gespeichert!"
+    showMessage(
+        "✅ Social-Media-Kanäle gespeichert!"
     );
 
 }
 
 
-/* =====================================================
-   WUNSCHLISTE ABSENDEN
-===================================================== */
+/* =========================================================
+   WUNSCHLISTE
+========================================================= */
 
-document
-    .getElementById(
-        "wishlistForm"
-    )
-    .addEventListener(
+function setupWishlist() {
+
+    const form =
+        document.getElementById(
+            "wishlistForm"
+        );
+
+
+    if (!form) return;
+
+
+    form.addEventListener(
         "submit",
         function (event) {
 
@@ -899,19 +1463,21 @@ document
             saveData();
 
 
-            document
-                .getElementById(
-                    "wishlistForm"
-                )
-                .reset();
+            form.reset();
 
 
-            document
-                .getElementById(
+            const message =
+                document.getElementById(
                     "wishlistMessage"
-                )
-                .textContent =
-                "✅ Dein Wunsch wurde gespeichert!";
+                );
+
+
+            if (message) {
+
+                message.textContent =
+                    "✅ Dein Wunsch wurde erfolgreich abgesendet!";
+
+            }
 
 
             loadWishlist();
@@ -919,10 +1485,12 @@ document
         }
     );
 
+}
 
-/* =====================================================
-   WÜNSCHE OWNER PANEL
-===================================================== */
+
+/* =========================================================
+   WUNSCHLISTE LADEN
+========================================================= */
 
 function loadWishlist() {
 
@@ -932,12 +1500,23 @@ function loadWishlist() {
         );
 
 
+    if (!container) return;
+
+
     if (
+        !Array.isArray(
+            data.wishes
+        ) ||
         data.wishes.length === 0
     ) {
 
-        container.innerHTML =
-            "<p>⭐ Noch keine Wünsche vorhanden.</p>";
+        container.innerHTML = `
+
+            <p>
+                ⭐ Noch keine Spieler-Wünsche vorhanden.
+            </p>
+
+        `;
 
         return;
 
@@ -1015,9 +1594,9 @@ function loadWishlist() {
 }
 
 
-/* =====================================================
+/* =========================================================
    WUNSCH LÖSCHEN
-===================================================== */
+========================================================= */
 
 function deleteWish(id) {
 
@@ -1035,20 +1614,40 @@ function deleteWish(id) {
 
     loadWishlist();
 
+
+    showMessage(
+        "✅ Wunsch gelöscht!"
+    );
+
 }
 
 
-/* =====================================================
+/* =========================================================
    ALLE WÜNSCHE LÖSCHEN
-===================================================== */
+========================================================= */
 
 function clearWishlist() {
 
     if (
-        !confirm(
-            "Wirklich alle Wünsche löschen?"
-        )
+        data.wishes.length === 0
     ) {
+
+        showMessage(
+            "Es gibt keine Wünsche."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "⚠️ Wirklich ALLE Spieler-Wünsche löschen?"
+        );
+
+
+    if (!confirmed) {
 
         return;
 
@@ -1063,16 +1662,16 @@ function clearWishlist() {
     loadWishlist();
 
 
-    alert(
-        "✅ Wunschliste gelöscht!"
+    showMessage(
+        "🗑 Alle Wünsche wurden gelöscht."
     );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    ALLES SPEICHERN
-===================================================== */
+========================================================= */
 
 function saveEverything() {
 
@@ -1083,30 +1682,15 @@ function saveEverything() {
 }
 
 
-/* =====================================================
-   OWNER PANEL SCHLIESSEN
-===================================================== */
-
-function closeOwnerPanel() {
-
-    document
-        .getElementById(
-            "ownerPanel"
-        )
-        .classList.remove(
-            "active"
-        );
-
-}
-
-
-/* =====================================================
+/* =========================================================
    HTML SICHER MACHEN
-===================================================== */
+========================================================= */
 
 function escapeHTML(value) {
 
-    return String(value)
+    return String(
+        value ?? ""
+    )
 
         .replaceAll(
             "&",
@@ -1136,32 +1720,37 @@ function escapeHTML(value) {
 }
 
 
-/* =====================================================
-   ATTRIBUTE SICHER MACHEN
-===================================================== */
+/* =========================================================
+   NACHRICHT
+========================================================= */
 
-function escapeAttribute(value) {
+function showMessage(text) {
 
-    return String(value)
+    console.log(
+        text
+    );
 
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
+}
 
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
 
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
+/* =========================================================
+   WUNSCHLISTE AKTIVIEREN
+========================================================= */
 
-        .replaceAll(
-            ">",
-            "&gt;"
-        );
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        setupWishlist
+    );
+
+}
+
+else {
+
+    setupWishlist();
 
 }
