@@ -15,8 +15,8 @@
    Diese Version ist nur für die Demo / lokale Verwaltung.
    ----------------------------------------------------- */
 
-const OWNER_EMAIL = "owner@example.com";
-const OWNER_PASSWORD = "AendereDiesesPasswort";
+const OWNER_EMAIL = "ServerOwner@gmail.com";
+const OWNER_PASSWORD = "Server";
 
 
 /* -----------------------------------------------------
