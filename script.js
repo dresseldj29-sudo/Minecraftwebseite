@@ -1,134 +1,430 @@
-// ============================================
-// SUPABASE
-// ============================================
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+/* =====================================================
+   MINECRAFT SERVER WEBSITE
+   SCRIPT.JS
+===================================================== */
 
 
-// ============================================
-// NAVIGATION
-// ============================================
+/* =====================================================
+   🔧 DEINE EINSTELLUNGEN
+===================================================== */
 
-function scrollToSection(id) {
+/*
+   WICHTIG:
 
-    const element =
-        document.getElementById(id);
+   Ändere hier deine Daten.
 
-    if (!element) return;
+   Benutze NICHT dein echtes Gmail-Passwort.
+   Dieses Passwort wäre für Besucher im Webseiten-Code sichtbar.
 
-    element.scrollIntoView({
-        behavior: "smooth"
-    });
+   Verwende stattdessen ein separates Passwort nur für
+   diese einfache Webseite.
+*/
+
+const CONFIG = {
+
+    /* OWNER LOGIN */
+
+    ownerEmail: "owner@example.com",
+
+    ownerPassword: "CHANGE-ME-1234",
+
+
+    /* SERVER */
+
+    serverIP: "play.deinserver.de",
+
+
+    /* SOCIAL MEDIA */
+
+    youtube:
+        "https://www.youtube.com/",
+
+    tiktok:
+        "https://www.tiktok.com/",
+
+    discord:
+        "https://discord.com/",
+
+
+    /* SERVER STATUS */
+
+    serverStatus: "online"
+
+};
+
+
+/* =====================================================
+   STANDARDDATEN
+===================================================== */
+
+let websiteData = {
+
+    serverIP:
+        CONFIG.serverIP,
+
+    serverStatus:
+        CONFIG.serverStatus,
+
+    youtube:
+        CONFIG.youtube,
+
+    tiktok:
+        CONFIG.tiktok,
+
+    discord:
+        CONFIG.discord,
+
+    wishlist:
+        []
+
+};
+
+
+/* =====================================================
+   GESPEICHERTE DATEN LADEN
+===================================================== */
+
+function loadData() {
+
+    const saved =
+        localStorage.getItem("minecraftWebsiteData");
+
+    if (saved) {
+
+        try {
+
+            websiteData =
+                JSON.parse(saved);
+
+        } catch {
+
+            console.log(
+                "Gespeicherte Daten konnten nicht geladen werden."
+            );
+
+        }
+
+    }
+
 }
 
 
-// ============================================
-// LOGIN MODAL
-// ============================================
+/* =====================================================
+   DATEN SPEICHERN
+===================================================== */
+
+function saveData() {
+
+    localStorage.setItem(
+        "minecraftWebsiteData",
+        JSON.stringify(websiteData)
+    );
+
+}
+
+
+/* =====================================================
+   SERVERSTATUS
+===================================================== */
+
+function updateServerStatus() {
+
+    const statusIcon =
+        document.getElementById("statusIcon");
+
+    const statusText =
+        document.getElementById("serverStatusText");
+
+    const statusDescription =
+        document.getElementById(
+            "serverStatusDescription"
+        );
+
+    const serverAddress =
+        document.getElementById(
+            "serverAddress"
+        );
+
+
+    if (!statusIcon) return;
+
+
+    serverAddress.textContent =
+        websiteData.serverIP;
+
+
+    if (websiteData.serverStatus === "online") {
+
+        statusIcon.textContent = "🟢";
+
+        statusText.textContent =
+            "Server Online";
+
+        statusDescription.textContent =
+            "Unser Minecraft-Server ist aktuell erreichbar.";
+
+    }
+
+
+    else if (
+        websiteData.serverStatus === "offline"
+    ) {
+
+        statusIcon.textContent = "🔴";
+
+        statusText.textContent =
+            "Server Offline";
+
+        statusDescription.textContent =
+            "Der Server ist momentan nicht erreichbar.";
+
+    }
+
+
+    else if (
+        websiteData.serverStatus === "maintenance"
+    ) {
+
+        statusIcon.textContent = "🟡";
+
+        statusText.textContent =
+            "Server in Wartung";
+
+        statusDescription.textContent =
+            "Der Server befindet sich momentan in Wartung.";
+
+    }
+
+}
+
+
+/* =====================================================
+   SOCIAL LINKS
+===================================================== */
+
+function updateLinks() {
+
+    document.getElementById(
+        "youtubeLink"
+    ).href = websiteData.youtube;
+
+
+    document.getElementById(
+        "tiktokLink"
+    ).href = websiteData.tiktok;
+
+
+    document.getElementById(
+        "discordLink"
+    ).href = websiteData.discord;
+
+}
+
+
+/* =====================================================
+   WUNSCHLISTE ANZEIGEN
+===================================================== */
+
+function updateWishlist() {
+
+    const container =
+        document.getElementById(
+            "wishlistItems"
+        );
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    if (
+        websiteData.wishlist.length === 0
+    ) {
+
+        container.innerHTML = `
+            <p style="color:#aaa;">
+                Noch keine Wünsche vorhanden.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    websiteData.wishlist.forEach(
+        function(wish) {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "wishlist-item";
+
+            item.textContent =
+                "💡 " + wish;
+
+            container.appendChild(item);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   WUNSCH HINZUFÜGEN
+===================================================== */
+
+function addWishlist() {
+
+    const input =
+        document.getElementById(
+            "wishlistInput"
+        );
+
+    const message =
+        document.getElementById(
+            "wishlistMessage"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        message.textContent =
+            "Bitte schreibe zuerst einen Wunsch.";
+
+        return;
+
+    }
+
+
+    websiteData.wishlist.push(text);
+
+
+    saveData();
+
+    updateWishlist();
+
+
+    input.value = "";
+
+
+    message.textContent =
+        "✅ Dein Wunsch wurde gespeichert!";
+
+
+    setTimeout(
+        function() {
+
+            message.textContent = "";
+
+        },
+        3000
+    );
+
+}
+
+
+/* =====================================================
+   OWNER LOGIN ÖFFNEN
+===================================================== */
 
 function openOwnerLogin() {
 
     document.getElementById(
-        "loginModal"
+        "ownerLogin"
     ).style.display = "flex";
+
 }
+
+
+/* =====================================================
+   OWNER LOGIN SCHLIESSEN
+===================================================== */
 
 function closeOwnerLogin() {
 
     document.getElementById(
-        "loginModal"
+        "ownerLogin"
     ).style.display = "none";
+
 }
 
 
-// ============================================
-// OWNER LOGIN
-// ============================================
+/* =====================================================
+   OWNER LOGIN
+===================================================== */
 
-async function ownerLogin() {
+function ownerLogin() {
 
     const email =
         document.getElementById(
             "ownerEmail"
         ).value.trim();
 
+
     const password =
         document.getElementById(
             "ownerPassword"
         ).value;
 
-    const message =
+
+    const error =
         document.getElementById(
-            "loginMessage"
+            "loginError"
         );
 
-    message.textContent =
-        "Login wird geprüft...";
+
+    if (
+        email === CONFIG.ownerEmail &&
+        password === CONFIG.ownerPassword
+    ) {
+
+        error.textContent = "";
 
 
-    const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+        closeOwnerLogin();
 
 
-    if (error) {
+        openOwnerPanel();
 
-        message.textContent =
-            "❌ E-Mail oder Passwort falsch.";
+
+        loadAdminValues();
+
 
         return;
+
     }
 
 
-    const user = data.user;
+    error.textContent =
+        "❌ E-Mail oder Passwort ist falsch.";
 
-
-    const { data: owner } =
-        await supabaseClient
-            .from("owners")
-            .select("id")
-            .eq("id", user.id)
-            .maybeSingle();
-
-
-    if (!owner) {
-
-        await supabaseClient.auth.signOut();
-
-        message.textContent =
-            "❌ Du bist kein Owner.";
-
-        return;
-    }
-
-
-    closeOwnerLogin();
-
-    openOwnerPanel();
-
-    loadAdminData();
 }
 
 
-// ============================================
-// OWNER PANEL
-// ============================================
+/* =====================================================
+   OWNER PANEL ÖFFNEN
+===================================================== */
 
 function openOwnerPanel() {
 
     document.getElementById(
         "ownerPanel"
-    ).style.display = "block";
+    ).style.display = "flex";
 
-    document.body.style.overflow = "hidden";
 }
 
+
+/* =====================================================
+   OWNER PANEL SCHLIESSEN
+===================================================== */
 
 function closeOwnerPanel() {
 
@@ -136,117 +432,124 @@ function closeOwnerPanel() {
         "ownerPanel"
     ).style.display = "none";
 
-    document.body.style.overflow = "";
 }
 
 
-// ============================================
-// LOGOUT
-// ============================================
+/* =====================================================
+   OWNER AUSLOGGEN
+===================================================== */
 
-async function ownerLogout() {
-
-    await supabaseClient.auth.signOut();
+function ownerLogout() {
 
     closeOwnerPanel();
 
-    alert("Du wurdest ausgeloggt.");
 }
 
 
-// ============================================
-// EINSTELLUNGEN LADEN
-// ============================================
+/* =====================================================
+   ADMIN WERTE LADEN
+===================================================== */
 
-async function loadSettings() {
+function loadAdminValues() {
 
-    const { data, error } =
-        await supabaseClient
-            .from("settings")
-            .select("*")
-            .limit(1)
-            .maybeSingle();
-
-
-    if (error || !data) {
-
-        console.log(
-            "Einstellungen konnten nicht geladen werden."
-        );
-
-        return;
-    }
+    document.getElementById(
+        "adminStatus"
+    ).value =
+        websiteData.serverStatus;
 
 
     document.getElementById(
-        "serverDomain"
-    ).textContent =
-        data.server_domain;
-
-
-    document.getElementById(
-        "youtubeLink"
-    ).href =
-        data.youtube || "#";
-
-
-    document.getElementById(
-        "tiktokLink"
-    ).href =
-        data.tiktok || "#";
-
-
-    document.getElementById(
-        "discordLink"
-    ).href =
-        data.discord || "#";
+        "adminServerIP"
+    ).value =
+        websiteData.serverIP;
 
 
     document.getElementById(
         "adminYoutube"
     ).value =
-        data.youtube || "";
+        websiteData.youtube;
 
 
     document.getElementById(
         "adminTiktok"
     ).value =
-        data.tiktok || "";
+        websiteData.tiktok;
 
 
     document.getElementById(
         "adminDiscord"
     ).value =
-        data.discord || "";
+        websiteData.discord;
 
-
-    document.getElementById(
-        "adminServerDomain"
-    ).value =
-        data.server_domain || "";
-
-
-    checkMinecraftServer(
-        data.server_domain
-    );
 }
 
 
-// ============================================
-// LINKS SPEICHERN
-// ============================================
+/* =====================================================
+   SERVER EINSTELLUNGEN SPEICHERN
+===================================================== */
 
-async function saveLinks() {
+function saveServerSettings() {
+
+    const status =
+        document.getElementById(
+            "adminStatus"
+        ).value;
+
+
+    const serverIP =
+        document.getElementById(
+            "adminServerIP"
+        ).value.trim();
+
+
+    if (!serverIP) {
+
+        alert(
+            "Bitte eine Server-IP eintragen."
+        );
+
+        return;
+
+    }
+
+
+    websiteData.serverStatus =
+        status;
+
+
+    websiteData.serverIP =
+        serverIP;
+
+
+    saveData();
+
+    updateServerStatus();
+
+
+    alert(
+        "✅ Server-Einstellungen gespeichert!"
+    );
+
+}
+
+
+/* =====================================================
+   SOCIAL LINKS SPEICHERN
+===================================================== */
+
+function saveLinks() {
 
     const youtube =
         document.getElementById(
             "adminYoutube"
         ).value.trim();
 
+
     const tiktok =
         document.getElementById(
             "adminTiktok"
         ).value.trim();
+
 
     const discord =
         document.getElementById(
@@ -254,464 +557,86 @@ async function saveLinks() {
         ).value.trim();
 
 
-    const { data: settings } =
-        await supabaseClient
-            .from("settings")
-            .select("id")
-            .limit(1)
-            .single();
+    websiteData.youtube =
+        youtube;
 
 
-    if (!settings) {
-
-        alert(
-            "❌ Einstellungen nicht gefunden."
-        );
-
-        return;
-    }
+    websiteData.tiktok =
+        tiktok;
 
 
-    const { error } =
-        await supabaseClient
-            .from("settings")
-            .update({
-                youtube: youtube,
-                tiktok: tiktok,
-                discord: discord
-            })
-            .eq("id", settings.id);
+    websiteData.discord =
+        discord;
 
 
-    if (error) {
+    saveData();
 
-        alert(
-            "❌ Fehler beim Speichern."
-        );
-
-        console.error(error);
-
-        return;
-    }
+    updateLinks();
 
 
     alert(
-        "✅ Social Links gespeichert!"
+        "✅ Links gespeichert!"
     );
 
-
-    loadSettings();
 }
 
 
-// ============================================
-// SERVER SPEICHERN
-// ============================================
+/* =====================================================
+   WUNSCHLISTE LÖSCHEN
+===================================================== */
 
-async function saveServer() {
+function clearWishlist() {
 
-    const domain =
-        document.getElementById(
-            "adminServerDomain"
-        ).value.trim();
-
-
-    if (!domain) {
-
-        alert(
-            "Bitte eine Server-Domain eingeben."
+    const confirmation =
+        confirm(
+            "Möchtest du wirklich alle Wünsche löschen?"
         );
 
-        return;
-    }
+
+    if (!confirmation) return;
 
 
-    const { data: settings } =
-        await supabaseClient
-            .from("settings")
-            .select("id")
-            .limit(1)
-            .single();
+    websiteData.wishlist = [];
 
 
-    const { error } =
-        await supabaseClient
-            .from("settings")
-            .update({
-                server_domain: domain
-            })
-            .eq("id", settings.id);
+    saveData();
 
-
-    if (error) {
-
-        alert(
-            "❌ Server konnte nicht gespeichert werden."
-        );
-
-        return;
-    }
+    updateWishlist();
 
 
     alert(
-        "✅ Server-Domain gespeichert!"
+        "🗑️ Wunschliste wurde gelöscht."
+    );
+
+}
+
+
+/* =====================================================
+   SERVER-IP KOPIEREN
+===================================================== */
+
+function copyServerIP() {
+
+    navigator.clipboard.writeText(
+        websiteData.serverIP
     );
 
 
-    loadSettings();
+    alert(
+        "📋 Server-IP wurde kopiert!"
+    );
+
 }
 
 
-// ============================================
-// MINECRAFT SERVER STATUS
-// ============================================
+/* =====================================================
+   START
+===================================================== */
 
-async function checkMinecraftServer(domain) {
+loadData();
 
-    const statusText =
-        document.getElementById(
-            "serverStatus"
-        );
+updateServerStatus();
 
-    const playerText =
-        document.getElementById(
-            "playerCount"
-        );
+updateLinks();
 
-    const icon =
-        document.getElementById(
-            "statusIcon"
-        );
-
-    const light =
-        document.getElementById(
-            "statusLight"
-        );
-
-
-    statusText.textContent =
-        "Server wird geprüft...";
-
-    playerText.textContent =
-        "Spieler: -";
-
-    icon.textContent =
-        "⏳";
-
-
-    try {
-
-        const response =
-            await fetch(
-                "https://api.mcsrvstat.us/3/" +
-                encodeURIComponent(domain)
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!data.online) {
-
-            statusText.textContent =
-                "🔴 Server offline";
-
-            playerText.textContent =
-                "Keine Verbindung zum Server";
-
-            icon.textContent =
-                "🔴";
-
-            light.style.background =
-                "#ff3333";
-
-            return;
-        }
-
-
-        statusText.textContent =
-            "🟢 Server online";
-
-
-        const online =
-            data.players?.online ?? 0;
-
-
-        const max =
-            data.players?.max ?? "?";
-
-
-        playerText.textContent =
-            "Spieler: " +
-            online +
-            " / " +
-            max;
-
-
-        icon.textContent =
-            "🟢";
-
-
-        light.style.background =
-            "#39ff75";
-
-
-        if (data.version) {
-
-            playerText.textContent +=
-                " • " +
-                data.version;
-        }
-
-
-    } catch (error) {
-
-        statusText.textContent =
-            "⚠️ Status nicht verfügbar";
-
-        playerText.textContent =
-            "Server konnte nicht geprüft werden.";
-
-        icon.textContent =
-            "⚠️";
-
-        console.error(error);
-    }
-}
-
-
-// ============================================
-// WUNSCH ABSCHICKEN
-// ============================================
-
-async function sendWish() {
-
-    const username =
-        document.getElementById(
-            "wishUsername"
-        ).value.trim();
-
-    const wish =
-        document.getElementById(
-            "wishText"
-        ).value.trim();
-
-    const message =
-        document.getElementById(
-            "wishMessage"
-        );
-
-
-    if (!username || !wish) {
-
-        message.textContent =
-            "❌ Bitte beide Felder ausfüllen.";
-
-        return;
-    }
-
-
-    message.textContent =
-        "Wird gesendet...";
-
-
-    const { error } =
-        await supabaseClient
-            .from("wishes")
-            .insert({
-                username: username,
-                wish: wish
-            });
-
-
-    if (error) {
-
-        message.textContent =
-            "❌ Wunsch konnte nicht gespeichert werden.";
-
-        console.error(error);
-
-        return;
-    }
-
-
-    message.textContent =
-        "✅ Dein Wunsch wurde gespeichert!";
-
-
-    document.getElementById(
-        "wishUsername"
-    ).value = "";
-
-
-    document.getElementById(
-        "wishText"
-    ).value = "";
-}
-
-
-// ============================================
-// OWNER WÜNSCHE LADEN
-// ============================================
-
-async function loadAdminWishes() {
-
-    const container =
-        document.getElementById(
-            "adminWishes"
-        );
-
-
-    container.innerHTML =
-        "Lade Wünsche...";
-
-
-    const { data, error } =
-        await supabaseClient
-            .from("wishes")
-            .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (error) {
-
-        container.innerHTML =
-            "❌ Wünsche konnten nicht geladen werden.";
-
-        console.error(error);
-
-        return;
-    }
-
-
-    if (!data.length) {
-
-        container.innerHTML =
-            "Noch keine Wünsche vorhanden.";
-
-        return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    data.forEach(wish => {
-
-        const div =
-            document.createElement("div");
-
-        div.className =
-            "admin-wish";
-
-
-        const strong =
-            document.createElement("strong");
-
-        strong.textContent =
-            "👤 " + wish.username;
-
-
-        const text =
-            document.createElement("div");
-
-        text.textContent =
-            wish.wish;
-
-
-        const button =
-            document.createElement("button");
-
-        button.className =
-            "delete-wish";
-
-        button.textContent =
-            "🗑️ Löschen";
-
-
-        button.onclick =
-            () => deleteWish(wish.id);
-
-
-        div.appendChild(strong);
-
-        div.appendChild(text);
-
-        div.appendChild(button);
-
-
-        container.appendChild(div);
-
-    });
-}
-
-
-// ============================================
-// WUNSCH LÖSCHEN
-// ============================================
-
-async function deleteWish(id) {
-
-    if (
-        !confirm(
-            "Diesen Wunsch wirklich löschen?"
-        )
-    ) {
-
-        return;
-    }
-
-
-    const { error } =
-        await supabaseClient
-            .from("wishes")
-            .delete()
-            .eq("id", id);
-
-
-    if (error) {
-
-        alert(
-            "❌ Wunsch konnte nicht gelöscht werden."
-        );
-
-        console.error(error);
-
-        return;
-    }
-
-
-    loadAdminWishes();
-}
-
-
-// ============================================
-// ADMIN DATEN
-// ============================================
-
-async function loadAdminData() {
-
-    await loadSettings();
-
-    await loadAdminWishes();
-}
-
-
-// ============================================
-// START
-// ============================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        loadSettings();
-
-    }
-);
+updateWishlist();
