@@ -1,76 +1,64 @@
 /* =====================================================
-   OWNER EINSTELLUNGEN
-   =====================================================
+   OWNER LOGIN
+=====================================================
 
    WICHTIG:
 
-   Diese Daten stehen im Browser-Code.
+   Diese Daten kannst DU ändern.
 
-   Das bedeutet:
-   Eine technisch versierte Person könnte
-   diese Daten aus dem JavaScript auslesen.
+   Beispiel:
 
-   Für eine echte sichere Webseite später
-   bitte eine Datenbank + sichere Anmeldung verwenden.
-   ===================================================== */
+   const OWNER_EMAIL = "Server";
+   const OWNER_PASSWORD = "DEIN_PASSWORT";
 
+   ACHTUNG:
+   Das ist KEIN sicherer Passwortschutz.
+   Jeder Besucher mit Programmierkenntnissen könnte
+   diese Daten im JavaScript sehen.
 
-/* =========================
-   OWNER LOGIN
-========================= */
+===================================================== */
 
 const OWNER_EMAIL = "Server@gmail.com";
 
 const OWNER_PASSWORD = "Server";
 
 
-/* =========================
-   STANDARD DATEN
-========================= */
+/* =====================================================
+   STANDARD-DATEN
+===================================================== */
 
 const defaultData = {
 
     serverName:
-        "MINECRAFT SERVER",
+        "Mein Minecraft Server",
 
-    serverDescription:
-        "Gemeinsam mehr erleben!",
-
-    serverDomain:
-        "play.example.de",
+    domain:
+        "play.deinserver.de",
 
     status:
-        "online",
+        "ONLINE",
+
+    description:
+        "Gemeinsam spielen. Gemeinsam erleben.",
 
     youtube:
-        "#",
+        "https://youtube.com/",
 
     tiktok:
-        "#",
+        "https://tiktok.com/",
 
     discord:
-        "#",
+        "https://discord.com/",
 
-    wishlist: [
-
-        {
-            title: "Neuen Spielmodus hinzufügen",
-            description: "Wunsch der Spieler"
-        },
-
-        {
-            title: "Neuen Spawn bauen",
-            description: "Idee für die Community"
-        }
-
-    ]
+    wishes:
+        []
 
 };
 
 
-/* =========================
+/* =====================================================
    DATEN LADEN
-========================= */
+===================================================== */
 
 let data =
     JSON.parse(
@@ -78,9 +66,9 @@ let data =
     ) || defaultData;
 
 
-/* =========================
+/* =====================================================
    DATEN SPEICHERN
-========================= */
+===================================================== */
 
 function saveData() {
 
@@ -92,179 +80,186 @@ function saveData() {
 }
 
 
-/* =========================
+/* =====================================================
    WEBSEITE AKTUALISIEREN
-========================= */
+===================================================== */
 
 function updateWebsite() {
 
-    document.getElementById(
-        "serverName"
-    ).textContent = data.serverName;
+    document.getElementById("serverTitle")
+        .textContent =
+        data.serverName;
 
+    document.getElementById("serverName")
+        .textContent =
+        data.serverName;
 
-    document.getElementById(
-        "footerServerName"
-    ).textContent = data.serverName;
+    document.getElementById("serverDomain")
+        .textContent =
+        data.domain;
 
+    document.getElementById("serverDescription")
+        .textContent =
+        data.description;
 
-    document.getElementById(
-        "serverDescription"
-    ).textContent =
-        data.serverDescription;
-
-
-    document.getElementById(
-        "serverDomain"
-    ).textContent =
-        data.serverDomain;
-
-
-    /* SOCIAL LINKS */
-
-    document.getElementById(
-        "youtubeLink"
-    ).href =
-        data.youtube;
-
-
-    document.getElementById(
-        "tiktokLink"
-    ).href =
-        data.tiktok;
-
-
-    document.getElementById(
-        "discordLink"
-    ).href =
-        data.discord;
-
-
-    /* SERVERSTATUS */
-
-    const circle =
-        document.getElementById(
-            "statusCircle"
-        );
-
-    const statusText =
-        document.getElementById(
-            "statusText"
-        );
-
-    const playerText =
-        document.getElementById(
-            "playerText"
-        );
-
-
-    circle.className =
-        "status-circle " +
+    document.getElementById("serverStatus")
+        .textContent =
         data.status;
 
 
-    if (data.status === "online") {
+    const circle =
+        document.getElementById("statusCircle");
 
-        circle.textContent = "●";
 
-        statusText.textContent =
-            "Server ist ONLINE";
+    circle.className =
+        "status-circle";
 
-        playerText.textContent =
-            "Spieler können jetzt beitreten.";
+
+    if (data.status === "ONLINE") {
+
+        circle.classList.add("online");
+
+    }
+
+    else if (data.status === "OFFLINE") {
+
+        circle.classList.add("offline");
+
+    }
+
+    else {
+
+        circle.classList.add("maintenance");
 
     }
 
 
-    if (data.status === "offline") {
+    document.getElementById("youtubeLink")
+        .href =
+        data.youtube;
 
-        circle.textContent = "●";
+    document.getElementById("tiktokLink")
+        .href =
+        data.tiktok;
 
-        statusText.textContent =
-            "Server ist OFFLINE";
-
-        playerText.textContent =
-            "Der Server ist momentan nicht erreichbar.";
-
-    }
-
-
-    if (data.status === "maintenance") {
-
-        circle.textContent = "●";
-
-        statusText.textContent =
-            "Server ist in WARTUNG";
-
-        playerText.textContent =
-            "Bitte später wieder versuchen.";
-
-    }
+    document.getElementById("discordLink")
+        .href =
+        data.discord;
 
 
-    updateWishlist();
+    displayWishes();
 
 }
 
 
-/* =========================
-   WUNSCHLISTE
-========================= */
+/* =====================================================
+   SERVER IP KOPIEREN
+===================================================== */
 
-function updateWishlist() {
+function copyServerIP() {
 
-    const container =
-        document.getElementById(
-            "wishlistContainer"
-        );
+    navigator.clipboard.writeText(
+        data.domain
+    );
 
-
-    container.innerHTML = "";
-
-
-    if (data.wishlist.length === 0) {
-
-        container.innerHTML =
-            "<p>Momentan gibt es keine Wünsche.</p>";
-
-        return;
-
-    }
-
-
-    data.wishlist.forEach(
-        function(item) {
-
-            const div =
-                document.createElement("div");
-
-
-            div.className =
-                "wishlist-item";
-
-
-            div.innerHTML = `
-
-                <h3>${escapeHTML(item.title)}</h3>
-
-                <p>
-                    ${escapeHTML(item.description)}
-                </p>
-
-            `;
-
-
-            container.appendChild(div);
-
-        }
+    alert(
+        "Server-Adresse kopiert:\n\n" +
+        data.domain
     );
 
 }
 
 
-/* =========================
+/* =====================================================
+   WUNSCH HINZUFÜGEN
+===================================================== */
+
+function addWish() {
+
+    const input =
+        document.getElementById("wishInput");
+
+    const wish =
+        input.value.trim();
+
+
+    if (!wish) {
+
+        alert(
+            "Bitte zuerst einen Wunsch eingeben."
+        );
+
+        return;
+    }
+
+
+    data.wishes.push(wish);
+
+    saveData();
+
+    input.value = "";
+
+    displayWishes();
+
+}
+
+
+/* =====================================================
+   WÜNSCHE ANZEIGEN
+===================================================== */
+
+function displayWishes() {
+
+    const list =
+        document.getElementById("wishList");
+
+
+    list.innerHTML = "";
+
+
+    if (data.wishes.length === 0) {
+
+        list.innerHTML =
+            `
+            <div class="wish-item">
+                📝 Noch keine Wünsche vorhanden.
+            </div>
+            `;
+
+        return;
+    }
+
+
+    data.wishes.forEach(
+        function(wish, index) {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "wish-item";
+
+
+            item.innerHTML =
+                `
+                <span>
+                    💡 ${escapeHTML(wish)}
+                </span>
+                `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+
+}
+
+
+/* =====================================================
    HTML SICHER MACHEN
-========================= */
+===================================================== */
 
 function escapeHTML(text) {
 
@@ -279,54 +274,52 @@ function escapeHTML(text) {
 }
 
 
-/* =========================
-   LOGIN ÖFFNEN
-========================= */
+/* =====================================================
+   OWNER BUTTON
+===================================================== */
 
-function openLogin() {
+document
+    .getElementById("ownerButton")
+    .addEventListener(
+        "click",
+        function() {
 
-    document.getElementById(
-        "loginOverlay"
-    ).style.display = "block";
+            document
+                .getElementById("loginModal")
+                .classList.remove("hidden");
 
-}
+        }
+    );
 
 
-/* =========================
+/* =====================================================
    LOGIN SCHLIESSEN
-========================= */
+===================================================== */
 
 function closeLogin() {
 
-    document.getElementById(
-        "loginOverlay"
-    ).style.display = "none";
+    document
+        .getElementById("loginModal")
+        .classList.add("hidden");
 
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+/* =====================================================
+   OWNER LOGIN
+===================================================== */
 
 function login() {
 
     const email =
-        document.getElementById(
-            "loginEmail"
-        ).value.trim();
-
+        document
+            .getElementById("loginEmail")
+            .value;
 
     const password =
-        document.getElementById(
-            "loginPassword"
-        ).value;
-
-
-    const error =
-        document.getElementById(
-            "loginError"
-        );
+        document
+            .getElementById("loginPassword")
+            .value;
 
 
     if (
@@ -334,11 +327,15 @@ function login() {
         password === OWNER_PASSWORD
     ) {
 
-        error.textContent = "";
+        document
+            .getElementById("loginModal")
+            .classList.add("hidden");
 
-        closeLogin();
 
-        openOwnerPanel();
+        document
+            .getElementById("ownerPanel")
+            .classList.remove("hidden");
+
 
         loadAdminData();
 
@@ -346,121 +343,97 @@ function login() {
 
     else {
 
-        error.textContent =
-            "E-Mail oder Passwort ist falsch.";
+        document
+            .getElementById("loginError")
+            .textContent =
+            "❌ E-Mail oder Passwort falsch.";
 
     }
 
 }
 
 
-/* =========================
-   OWNER PANEL ÖFFNEN
-========================= */
-
-function openOwnerPanel() {
-
-    document.getElementById(
-        "ownerPanel"
-    ).style.display = "block";
-
-}
-
-
-/* =========================
-   OWNER PANEL SCHLIESSEN
-========================= */
-
-function closeOwnerPanel() {
-
-    document.getElementById(
-        "ownerPanel"
-    ).style.display = "none";
-
-}
-
-
-/* =========================
-   ADMIN DATEN LADEN
-========================= */
+/* =====================================================
+   OWNER PANEL DATEN LADEN
+===================================================== */
 
 function loadAdminData() {
 
-    document.getElementById(
-        "adminServerName"
-    ).value =
+    document
+        .getElementById("adminServerName")
+        .value =
         data.serverName;
 
 
-    document.getElementById(
-        "adminServerDomain"
-    ).value =
-        data.serverDomain;
+    document
+        .getElementById("adminDomain")
+        .value =
+        data.domain;
 
 
-    document.getElementById(
-        "adminDescription"
-    ).value =
-        data.serverDescription;
-
-
-    document.getElementById(
-        "adminStatus"
-    ).value =
+    document
+        .getElementById("adminStatus")
+        .value =
         data.status;
 
 
-    document.getElementById(
-        "adminYoutube"
-    ).value =
+    document
+        .getElementById("adminDescription")
+        .value =
+        data.description;
+
+
+    document
+        .getElementById("adminYoutube")
+        .value =
         data.youtube;
 
 
-    document.getElementById(
-        "adminTiktok"
-    ).value =
+    document
+        .getElementById("adminTiktok")
+        .value =
         data.tiktok;
 
 
-    document.getElementById(
-        "adminDiscord"
-    ).value =
+    document
+        .getElementById("adminDiscord")
+        .value =
         data.discord;
 
 
-    updateAdminWishlist();
+    displayAdminWishes();
 
 }
 
 
-/* =========================
+/* =====================================================
    SERVER SPEICHERN
-========================= */
+===================================================== */
 
-function saveServerSettings() {
+function saveServer() {
 
     data.serverName =
-        document.getElementById(
-            "adminServerName"
-        ).value;
+        document
+            .getElementById("adminServerName")
+            .value;
 
 
-    data.serverDomain =
-        document.getElementById(
-            "adminServerDomain"
-        ).value;
-
-
-    data.serverDescription =
-        document.getElementById(
-            "adminDescription"
-        ).value;
+    data.domain =
+        document
+            .getElementById("adminDomain")
+            .value;
 
 
     data.status =
-        document.getElementById(
-            "adminStatus"
-        ).value;
+        document
+            .getElementById("adminStatus")
+            .value;
+
+
+    data.description =
+        document
+            .getElementById("adminDescription")
+            .value;
 
 
     saveData();
@@ -468,34 +441,34 @@ function saveServerSettings() {
     updateWebsite();
 
     alert(
-        "Server-Einstellungen gespeichert!"
+        "✅ Serverdaten gespeichert!"
     );
 
 }
 
 
-/* =========================
+/* =====================================================
    SOCIAL LINKS SPEICHERN
-========================= */
+===================================================== */
 
-function saveSocials() {
+function saveSocial() {
 
     data.youtube =
-        document.getElementById(
-            "adminYoutube"
-        ).value;
+        document
+            .getElementById("adminYoutube")
+            .value;
 
 
     data.tiktok =
-        document.getElementById(
-            "adminTiktok"
-        ).value;
+        document
+            .getElementById("adminTiktok")
+            .value;
 
 
     data.discord =
-        document.getElementById(
-            "adminDiscord"
-        ).value;
+        document
+            .getElementById("adminDiscord")
+            .value;
 
 
     saveData();
@@ -503,117 +476,63 @@ function saveSocials() {
     updateWebsite();
 
     alert(
-        "Social-Media-Links gespeichert!"
+        "✅ Social-Media-Links gespeichert!"
     );
 
 }
 
 
-/* =========================
-   WUNSCH HINZUFÜGEN
-========================= */
+/* =====================================================
+   OWNER WÜNSCHE
+===================================================== */
 
-function addWishlist() {
+function displayAdminWishes() {
 
-    const title =
-        document.getElementById(
-            "wishlistTitle"
-        ).value.trim();
-
-
-    const description =
-        document.getElementById(
-            "wishlistDescription"
-        ).value.trim();
+    const list =
+        document
+            .getElementById("adminWishList");
 
 
-    if (!title) {
+    list.innerHTML = "";
 
-        alert(
-            "Bitte einen Wunsch eingeben."
-        );
+
+    if (data.wishes.length === 0) {
+
+        list.innerHTML =
+            `
+            <p>
+                Keine Spieler-Wünsche vorhanden.
+            </p>
+            `;
 
         return;
-
     }
 
 
-    data.wishlist.push({
+    data.wishes.forEach(
+        function(wish, index) {
 
-        title:
-            title,
-
-        description:
-            description ||
-            "Keine Beschreibung"
-
-    });
-
-
-    document.getElementById(
-        "wishlistTitle"
-    ).value = "";
-
-
-    document.getElementById(
-        "wishlistDescription"
-    ).value = "";
-
-
-    saveData();
-
-    updateWebsite();
-
-    updateAdminWishlist();
-
-}
-
-
-/* =========================
-   ADMIN WUNSCHLISTE
-========================= */
-
-function updateAdminWishlist() {
-
-    const container =
-        document.getElementById(
-            "adminWishlist"
-        );
-
-
-    container.innerHTML = "";
-
-
-    data.wishlist.forEach(
-        function(item, index) {
-
-            const div =
+            const item =
                 document.createElement("div");
 
+            item.className =
+                "admin-wish";
 
-            div.className =
-                "admin-wishlist-item";
 
-
-            div.innerHTML = `
-
-                <strong>
-                    ${escapeHTML(item.title)}
-                </strong>
-
-                <p>
-                    ${escapeHTML(item.description)}
-                </p>
+            item.innerHTML =
+                `
+                <span>
+                    💡 ${escapeHTML(wish)}
+                </span>
 
                 <button
-                    onclick="deleteWishlist(${index})">
-                    LÖSCHEN
+                    onclick="deleteWish(${index})">
+                    🗑️ Löschen
                 </button>
+                `;
 
-            `;
 
-
-            container.appendChild(div);
+            list.appendChild(item);
 
         }
     );
@@ -621,11 +540,11 @@ function updateAdminWishlist() {
 }
 
 
-/* =========================
+/* =====================================================
    WUNSCH LÖSCHEN
-========================= */
+===================================================== */
 
-function deleteWishlist(index) {
+function deleteWish(index) {
 
     if (
         !confirm(
@@ -638,51 +557,33 @@ function deleteWishlist(index) {
     }
 
 
-    data.wishlist.splice(
-        index,
-        1
-    );
-
+    data.wishes.splice(index, 1);
 
     saveData();
 
-    updateWebsite();
+    displayWishes();
 
-    updateAdminWishlist();
+    displayAdminWishes();
 
 }
 
 
-/* =========================
-   LOGOUT
-========================= */
+/* =====================================================
+   ABMELDEN
+===================================================== */
 
 function logout() {
 
-    closeOwnerPanel();
+    document
+        .getElementById("ownerPanel")
+        .classList.add("hidden");
 
 }
 
 
-/* =========================
-   SERVER-IP KOPIEREN
-========================= */
-
-function copyServerIP() {
-
-    navigator.clipboard.writeText(
-        data.serverDomain
-    );
-
-    alert(
-        "Server-Adresse wurde kopiert!"
-    );
-
-}
-
-
-/* =========================
+/* =====================================================
    START
-========================= */
+===================================================== */
 
+updateWebsite();
 updateWebsite();
