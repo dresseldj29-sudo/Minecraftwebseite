@@ -1,27 +1,27 @@
 /* =====================================================
    MINECRAFT SERVER WEBSEITE
    OWNER PANEL
-   ===================================================== */
+===================================================== */
 
 
-/* -----------------------------------------------------
+/* =====================================================
    OWNER LOGIN
 
+   HIER DEINE TEST-DATEN EINTRAGEN.
+
    WICHTIG:
-   Diese Daten sind bei einer reinen GitHub-Pages-Seite
-   NICHT geheim.
+   GitHub Pages macht diesen Code öffentlich.
+   Deshalb KEIN wichtiges echtes Passwort verwenden.
+===================================================== */
 
-   Deshalb hier KEIN echtes Passwort eintragen.
-   Diese Version ist nur für die Demo / lokale Verwaltung.
-   ----------------------------------------------------- */
+const OWNER_EMAIL = "deine-email@gmail.com";
 
-const OWNER_EMAIL = "ServerOwner@gmail.com";
-const OWNER_PASSWORD = "Server";
+const OWNER_PASSWORD = "MeinTestPasswort123";
 
 
-/* -----------------------------------------------------
+/* =====================================================
    STANDARD DATEN
-   ----------------------------------------------------- */
+===================================================== */
 
 const defaultData = {
 
@@ -31,94 +31,135 @@ const defaultData = {
 
     players: 0,
 
-    links: {
+    social: [
 
-        youtube: "https://youtube.com",
+        {
+            type: "YouTube",
+            url: "https://youtube.com/",
+            title: "YouTube",
+            description: "Unsere Videos"
+        },
 
-        tiktok: "https://tiktok.com",
+        {
+            type: "TikTok",
+            url: "https://tiktok.com/",
+            title: "TikTok",
+            description: "Unsere TikToks"
+        },
 
-        discord: "https://discord.com"
+        {
+            type: "Discord",
+            url: "https://discord.com/",
+            title: "Discord",
+            description: "Unsere Community"
+        }
 
-    },
+    ],
 
     wishes: []
 
 };
 
 
-/* -----------------------------------------------------
+/* =====================================================
    DATEN LADEN
-   ----------------------------------------------------- */
+===================================================== */
 
-let data =
-    JSON.parse(localStorage.getItem("minecraftWebsiteData"))
-    || defaultData;
+let data;
+
+try {
+
+    data =
+        JSON.parse(
+            localStorage.getItem(
+                "minecraftServerWebsite"
+            )
+        )
+        || defaultData;
+
+}
+catch {
+
+    data = defaultData;
+
+}
 
 
-/* -----------------------------------------------------
+/* =====================================================
    DATEN SPEICHERN
-   ----------------------------------------------------- */
+===================================================== */
 
 function saveData() {
 
     localStorage.setItem(
-        "minecraftWebsiteData",
+        "minecraftServerWebsite",
         JSON.stringify(data)
     );
 
 }
 
 
-/* -----------------------------------------------------
-   SEITE STARTEN
-   ----------------------------------------------------- */
+/* =====================================================
+   START
+===================================================== */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    updateWebsite();
+        updateWebsite();
 
-    loadOwnerFields();
+        loadOwnerFields();
 
-    loadWishlist();
+        loadAdminSocial();
 
-});
+        loadWishlist();
+
+    }
+);
 
 
-/* -----------------------------------------------------
+/* =====================================================
    WEBSITE AKTUALISIEREN
-   ----------------------------------------------------- */
+===================================================== */
 
 function updateWebsite() {
 
-    document.getElementById("serverDomain").textContent =
-        data.domain;
+    document.getElementById(
+        "serverDomain"
+    ).textContent = data.domain;
 
+    document.getElementById(
+        "playerCount"
+    ).textContent = data.players;
 
-    document.getElementById("playerCount").textContent =
-        data.players;
+    updateStatus();
 
-
-    updateServerStatus();
-
-    updateSocialLinks();
+    updateSocial();
 
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
    SERVERSTATUS
-   ----------------------------------------------------- */
+===================================================== */
 
-function updateServerStatus() {
+function updateStatus() {
 
     const icon =
-        document.getElementById("statusIcon");
+        document.getElementById(
+            "statusIcon"
+        );
 
     const title =
-        document.getElementById("statusTitle");
+        document.getElementById(
+            "statusTitle"
+        );
 
     const description =
-        document.getElementById("statusDescription");
+        document.getElementById(
+            "statusDescription"
+        );
 
 
     if (data.status === "online") {
@@ -155,158 +196,217 @@ function updateServerStatus() {
             "Server ist in Wartung";
 
         description.textContent =
-            "Der Server wird momentan gewartet.";
+            "Der Minecraft Server wird momentan gewartet.";
 
     }
 
 }
 
 
-/* -----------------------------------------------------
-   SOCIAL MEDIA
-   ----------------------------------------------------- */
+/* =====================================================
+   SOCIAL LINKS ANZEIGEN
+===================================================== */
 
-function updateSocialLinks() {
+function updateSocial() {
 
     const container =
-        document.getElementById("socialLinks");
+        document.getElementById(
+            "socialLinks"
+        );
 
 
     container.innerHTML = "";
 
 
-    const links = [
+    data.social.forEach(
+        function (social) {
 
-        {
-            name: "YouTube",
-            icon: "▶️",
-            text: "Unsere Videos",
-            url: data.links.youtube
-        },
 
-        {
-            name: "TikTok",
-            icon: "🎵",
-            text: "Unsere TikToks",
-            url: data.links.tiktok
-        },
+            let icon = "🔗";
 
-        {
-            name: "Discord",
-            icon: "💬",
-            text: "Unsere Community",
-            url: data.links.discord
+
+            if (
+                social.type === "YouTube"
+            ) {
+
+                icon = "▶️";
+
+            }
+
+
+            if (
+                social.type === "TikTok"
+            ) {
+
+                icon = "🎵";
+
+            }
+
+
+            if (
+                social.type === "Discord"
+            ) {
+
+                icon = "💬";
+
+            }
+
+
+            const card =
+                document.createElement(
+                    "a"
+                );
+
+
+            card.className =
+                "social-card";
+
+
+            card.href =
+                social.url;
+
+
+            card.target =
+                "_blank";
+
+
+            card.rel =
+                "noopener noreferrer";
+
+
+            card.innerHTML = `
+
+                <div class="social-icon">
+                    ${icon}
+                </div>
+
+                <h3>
+                    ${escapeHTML(
+                        social.title
+                    )}
+                </h3>
+
+                <p>
+                    ${escapeHTML(
+                        social.description
+                    )}
+                </p>
+
+            `;
+
+
+            container.appendChild(card);
+
         }
-
-    ];
-
-
-    links.forEach(function (link) {
-
-        const card =
-            document.createElement("a");
-
-
-        card.className =
-            "social-card";
-
-
-        card.href =
-            link.url;
-
-
-        card.target =
-            "_blank";
-
-
-        card.rel =
-            "noopener noreferrer";
-
-
-        card.innerHTML = `
-
-            <div class="social-icon">
-                ${link.icon}
-            </div>
-
-            <h3>
-                ${link.name}
-            </h3>
-
-            <p>
-                ${link.text}
-            </p>
-
-        `;
-
-
-        container.appendChild(card);
-
-    });
+    );
 
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
    DOMAIN KOPIEREN
-   ----------------------------------------------------- */
+===================================================== */
 
 function copyDomain() {
 
-    navigator.clipboard.writeText(
-        data.domain
-    );
+    navigator.clipboard
+        .writeText(data.domain)
+        .then(
+            function () {
 
+                alert(
+                    "✅ Server-Domain kopiert!"
+                );
 
-    alert(
-        "Server-Domain wurde kopiert!"
-    );
+            }
+        )
+        .catch(
+            function () {
+
+                alert(
+                    "Domain: " +
+                    data.domain
+                );
+
+            }
+        );
 
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
    LOGIN ÖFFNEN
-   ----------------------------------------------------- */
+===================================================== */
 
 function openLogin() {
 
     document
-        .getElementById("loginOverlay")
+        .getElementById(
+            "loginOverlay"
+        )
         .classList.add("active");
+
+
+    setTimeout(
+        function () {
+
+            document
+                .getElementById(
+                    "ownerEmail"
+                )
+                .focus();
+
+        },
+        100
+    );
 
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
    LOGIN SCHLIESSEN
-   ----------------------------------------------------- */
+===================================================== */
 
 function closeLogin() {
 
     document
-        .getElementById("loginOverlay")
-        .classList.remove("active");
+        .getElementById(
+            "loginOverlay"
+        )
+        .classList.remove(
+            "active"
+        );
 
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
    OWNER LOGIN
-   ----------------------------------------------------- */
+===================================================== */
 
 function ownerLogin() {
 
     const email =
-        document.getElementById("ownerEmail").value.trim();
+        document
+            .getElementById(
+                "ownerEmail"
+            )
+            .value
+            .trim();
 
 
     const password =
-        document.getElementById("ownerPassword").value;
+        document
+            .getElementById(
+                "ownerPassword"
+            )
+            .value;
 
 
     const error =
-        document.getElementById("loginError");
+        document.getElementById(
+            "loginError"
+        );
 
 
     if (
@@ -321,11 +421,17 @@ function ownerLogin() {
 
 
         document
-            .getElementById("ownerPanel")
-            .classList.add("active");
+            .getElementById(
+                "ownerPanel"
+            )
+            .classList.add(
+                "active"
+            );
 
 
         loadOwnerFields();
+
+        loadAdminSocial();
 
         loadWishlist();
 
@@ -334,92 +440,96 @@ function ownerLogin() {
     else {
 
         error.textContent =
-            "❌ E-Mail oder Passwort ist falsch.";
+            "❌ E-Mail oder Passwort falsch.";
 
     }
 
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
+   ENTER BEIM LOGIN
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Enter" &&
+            document
+                .getElementById(
+                    "loginOverlay"
+                )
+                .classList.contains(
+                    "active"
+                )
+        ) {
+
+            ownerLogin();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    OWNER FELDER LADEN
-   ----------------------------------------------------- */
+===================================================== */
 
 function loadOwnerFields() {
 
-    document.getElementById("youtubeInput").value =
-        data.links.youtube;
+    document.getElementById(
+        "domainInput"
+    ).value = data.domain;
 
 
-    document.getElementById("tiktokInput").value =
-        data.links.tiktok;
+    document.getElementById(
+        "statusInput"
+    ).value = data.status;
 
 
-    document.getElementById("discordInput").value =
-        data.links.discord;
-
-
-    document.getElementById("domainInput").value =
-        data.domain;
-
-
-    document.getElementById("statusInput").value =
-        data.status;
-
-
-    document.getElementById("playersInput").value =
-        data.players;
+    document.getElementById(
+        "playersInput"
+    ).value = data.players;
 
 }
 
 
-/* -----------------------------------------------------
-   LINKS SPEICHERN
-   ----------------------------------------------------- */
-
-function saveLinks() {
-
-    data.links.youtube =
-        document.getElementById("youtubeInput").value;
-
-
-    data.links.tiktok =
-        document.getElementById("tiktokInput").value;
-
-
-    data.links.discord =
-        document.getElementById("discordInput").value;
-
-
-    saveData();
-
-    updateWebsite();
-
-
-    alert(
-        "✅ Social-Media-Links gespeichert!"
-    );
-
-}
-
-
-/* -----------------------------------------------------
+/* =====================================================
    SERVER SPEICHERN
-   ----------------------------------------------------- */
+===================================================== */
 
 function saveServer() {
 
     data.domain =
-        document.getElementById("domainInput").value;
+        document
+            .getElementById(
+                "domainInput"
+            )
+            .value
+            .trim();
 
 
     data.status =
-        document.getElementById("statusInput").value;
+        document
+            .getElementById(
+                "statusInput"
+            )
+            .value;
 
 
     data.players =
-        Number(
-            document.getElementById("playersInput").value
+        Math.max(
+            0,
+            Number(
+                document
+                    .getElementById(
+                        "playersInput"
+                    )
+                    .value
+            ) || 0
         );
 
 
@@ -429,93 +539,405 @@ function saveServer() {
 
 
     alert(
-        "✅ Server-Einstellungen gespeichert!"
+        "✅ Server gespeichert!"
     );
 
 }
 
 
-/* -----------------------------------------------------
-   WUNSCH ABSENDEN
-   ----------------------------------------------------- */
+/* =====================================================
+   SOCIAL ADMIN LADEN
+===================================================== */
 
-document
-    .getElementById("wishlistForm")
-    .addEventListener("submit", function (event) {
+function loadAdminSocial() {
 
-        event.preventDefault();
-
-
-        const name =
-            document.getElementById("wishName").value.trim();
+    const container =
+        document.getElementById(
+            "adminSocialList"
+        );
 
 
-        const title =
-            document.getElementById("wishTitle").value.trim();
+    container.innerHTML = "";
 
 
-        const text =
-            document.getElementById("wishText").value.trim();
+    data.social.forEach(
+        function (social, index) {
 
-
-        if (!name || !title || !text) {
-
-            return;
+            createSocialAdminRow(
+                social,
+                index
+            );
 
         }
+    );
+
+}
 
 
-        const wish = {
+/* =====================================================
+   SOCIAL ADMIN ZEILE
+===================================================== */
 
-            id: Date.now(),
+function createSocialAdminRow(
+    social,
+    index
+) {
 
-            name: name,
-
-            title: title,
-
-            text: text,
-
-            date: new Date().toLocaleString("de-DE")
-
-        };
-
-
-        data.wishes.push(wish);
+    const container =
+        document.getElementById(
+            "adminSocialList"
+        );
 
 
-        saveData();
+    const row =
+        document.createElement(
+            "div"
+        );
 
 
-        document
-            .getElementById("wishlistForm")
-            .reset();
+    row.className =
+        "social-admin-row";
 
 
-        document
-            .getElementById("wishlistMessage")
-            .textContent =
-            "✅ Dein Wunsch wurde gespeichert!";
+    row.innerHTML = `
+
+        <select>
+
+            <option ${
+                social.type === "YouTube"
+                ? "selected"
+                : ""
+            }>
+                YouTube
+            </option>
+
+            <option ${
+                social.type === "TikTok"
+                ? "selected"
+                : ""
+            }>
+                TikTok
+            </option>
+
+            <option ${
+                social.type === "Discord"
+                ? "selected"
+                : ""
+            }>
+                Discord
+            </option>
+
+        </select>
 
 
-        loadWishlist();
+        <input
+            type="url"
+            value="${escapeAttribute(
+                social.url
+            )}"
+            placeholder="Link">
+
+
+        <button
+            class="remove-social"
+            onclick="removeSocial(${index})">
+
+            ×
+
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+/* =====================================================
+   SOCIAL LINK HINZUFÜGEN
+===================================================== */
+
+function addSocialLink() {
+
+    data.social.push({
+
+        type: "YouTube",
+
+        url: "https://youtube.com/",
+
+        title: "Neuer Kanal",
+
+        description: "Unser Kanal"
 
     });
 
 
-/* -----------------------------------------------------
-   WÜNSCHE IM OWNER PANEL
-   ----------------------------------------------------- */
+    loadAdminSocial();
+
+}
+
+
+/* =====================================================
+   SOCIAL LINK LÖSCHEN
+===================================================== */
+
+function removeSocial(index) {
+
+    if (
+        !confirm(
+            "Diesen Kanal wirklich löschen?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    data.social.splice(
+        index,
+        1
+    );
+
+
+    loadAdminSocial();
+
+}
+
+
+/* =====================================================
+   SOCIAL LINKS SPEICHERN
+===================================================== */
+
+function saveSocialLinks() {
+
+    const rows =
+        document.querySelectorAll(
+            ".social-admin-row"
+        );
+
+
+    const newSocial = [];
+
+
+    rows.forEach(
+        function (row) {
+
+            const select =
+                row.querySelector(
+                    "select"
+                );
+
+
+            const input =
+                row.querySelector(
+                    "input"
+                );
+
+
+            const type =
+                select.value;
+
+
+            const url =
+                input.value.trim();
+
+
+            let title =
+                type;
+
+
+            let description =
+                "Unser " +
+                type +
+                " Kanal";
+
+
+            if (type === "YouTube") {
+
+                title = "YouTube";
+
+                description =
+                    "Unsere YouTube Videos";
+
+            }
+
+
+            if (type === "TikTok") {
+
+                title = "TikTok";
+
+                description =
+                    "Unsere TikTok Videos";
+
+            }
+
+
+            if (type === "Discord") {
+
+                title = "Discord";
+
+                description =
+                    "Unsere Discord Community";
+
+            }
+
+
+            if (url) {
+
+                newSocial.push({
+
+                    type: type,
+
+                    url: url,
+
+                    title: title,
+
+                    description: description
+
+                });
+
+            }
+
+        }
+    );
+
+
+    data.social =
+        newSocial;
+
+
+    saveData();
+
+    updateSocial();
+
+
+    alert(
+        "✅ Social-Media-Links gespeichert!"
+    );
+
+}
+
+
+/* =====================================================
+   WUNSCHLISTE ABSENDEN
+===================================================== */
+
+document
+    .getElementById(
+        "wishlistForm"
+    )
+    .addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document
+                    .getElementById(
+                        "wishName"
+                    )
+                    .value
+                    .trim();
+
+
+            const title =
+                document
+                    .getElementById(
+                        "wishTitle"
+                    )
+                    .value
+                    .trim();
+
+
+            const text =
+                document
+                    .getElementById(
+                        "wishText"
+                    )
+                    .value
+                    .trim();
+
+
+            if (
+                !name ||
+                !title ||
+                !text
+            ) {
+
+                return;
+
+            }
+
+
+            data.wishes.push({
+
+                id:
+                    Date.now(),
+
+                name:
+                    name,
+
+                title:
+                    title,
+
+                text:
+                    text,
+
+                date:
+                    new Date()
+                        .toLocaleString(
+                            "de-DE"
+                        )
+
+            });
+
+
+            saveData();
+
+
+            document
+                .getElementById(
+                    "wishlistForm"
+                )
+                .reset();
+
+
+            document
+                .getElementById(
+                    "wishlistMessage"
+                )
+                .textContent =
+                "✅ Dein Wunsch wurde gespeichert!";
+
+
+            loadWishlist();
+
+        }
+    );
+
+
+/* =====================================================
+   WÜNSCHE OWNER PANEL
+===================================================== */
 
 function loadWishlist() {
 
     const container =
-        document.getElementById("adminWishlist");
+        document.getElementById(
+            "adminWishlist"
+        );
 
 
-    if (!data.wishes.length) {
+    if (
+        data.wishes.length === 0
+    ) {
 
         container.innerHTML =
-            "<p>Keine Wünsche vorhanden.</p>";
+            "<p>⭐ Noch keine Wünsche vorhanden.</p>";
 
         return;
 
@@ -525,65 +947,88 @@ function loadWishlist() {
     container.innerHTML = "";
 
 
-    data.wishes.forEach(function (wish) {
+    data.wishes.forEach(
+        function (wish) {
 
-        const item =
-            document.createElement("div");
-
-
-        item.className =
-            "wish-admin-card";
-
-
-        item.innerHTML = `
-
-            <h4>
-                ⭐ ${escapeHTML(wish.title)}
-            </h4>
-
-            <p>
-                <strong>Spieler:</strong>
-                ${escapeHTML(wish.name)}
-            </p>
-
-            <p>
-                <strong>Datum:</strong>
-                ${escapeHTML(wish.date)}
-            </p>
-
-            <p>
-                ${escapeHTML(wish.text)}
-            </p>
-
-            <button
-                onclick="deleteWish(${wish.id})"
-                class="danger-button"
-            >
-                WUNSCH LÖSCHEN
-            </button>
-
-        `;
+            const card =
+                document.createElement(
+                    "div"
+                );
 
 
-        container.appendChild(item);
+            card.className =
+                "wish-card";
 
-    });
+
+            card.innerHTML = `
+
+                <h4>
+                    ⭐ ${escapeHTML(
+                        wish.title
+                    )}
+                </h4>
+
+                <p>
+                    <strong>
+                        Spieler:
+                    </strong>
+
+                    ${escapeHTML(
+                        wish.name
+                    )}
+                </p>
+
+                <p>
+                    <strong>
+                        Datum:
+                    </strong>
+
+                    ${escapeHTML(
+                        wish.date
+                    )}
+                </p>
+
+                <p>
+                    ${escapeHTML(
+                        wish.text
+                    )}
+                </p>
+
+                <button
+                    class="wish-delete"
+                    onclick="deleteWish(${wish.id})">
+
+                    🗑 WUNSCH LÖSCHEN
+
+                </button>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
 
 }
 
 
-/* -----------------------------------------------------
-   EINEN WUNSCH LÖSCHEN
-   ----------------------------------------------------- */
+/* =====================================================
+   WUNSCH LÖSCHEN
+===================================================== */
 
 function deleteWish(id) {
 
     data.wishes =
-        data.wishes.filter(function (wish) {
+        data.wishes.filter(
+            function (wish) {
 
-            return wish.id !== id;
+                return wish.id !== id;
 
-        });
+            }
+        );
 
 
     saveData();
@@ -593,15 +1038,15 @@ function deleteWish(id) {
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
    ALLE WÜNSCHE LÖSCHEN
-   ----------------------------------------------------- */
+===================================================== */
 
 function clearWishlist() {
 
     if (
         !confirm(
-            "Wirklich ALLE Wünsche löschen?"
+            "Wirklich alle Wünsche löschen?"
         )
     ) {
 
@@ -617,38 +1062,106 @@ function clearWishlist() {
 
     loadWishlist();
 
+
+    alert(
+        "✅ Wunschliste gelöscht!"
+    );
+
 }
 
 
-/* -----------------------------------------------------
+/* =====================================================
+   ALLES SPEICHERN
+===================================================== */
+
+function saveEverything() {
+
+    saveServer();
+
+    saveSocialLinks();
+
+}
+
+
+/* =====================================================
    OWNER PANEL SCHLIESSEN
-   ----------------------------------------------------- */
+===================================================== */
 
 function closeOwnerPanel() {
 
     document
-        .getElementById("ownerPanel")
-        .classList.remove("active");
+        .getElementById(
+            "ownerPanel"
+        )
+        .classList.remove(
+            "active"
+        );
 
 }
 
 
-/* -----------------------------------------------------
-   HTML SICHER AUSGEBEN
-   ----------------------------------------------------- */
+/* =====================================================
+   HTML SICHER MACHEN
+===================================================== */
 
 function escapeHTML(value) {
 
     return String(value)
 
-        .replaceAll("&", "&amp;")
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
 
-        .replaceAll("<", "&lt;")
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
 
-        .replaceAll(">", "&gt;")
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
 
-        .replaceAll('"', "&quot;")
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
 
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================================
+   ATTRIBUTE SICHER MACHEN
+===================================================== */
+
+function escapeAttribute(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        );
 
 }
