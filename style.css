@@ -1,7 +1,11 @@
+/* =====================================================
+   GRUNDLAGEN
+===================================================== */
+
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 html {
@@ -10,14 +14,14 @@ html {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #050505;
+    background: #07111f;
     color: white;
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* =====================================================
+   NAVBAR
+===================================================== */
 
 .navbar {
     position: fixed;
@@ -26,65 +30,65 @@ body {
 
     width: 100%;
 
-    padding: 18px 5%;
+    padding: 18px 6%;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(5, 12, 25, 0.85);
 
     backdrop-filter: blur(15px);
 
-    z-index: 1000;
-
     border-bottom: 1px solid rgba(255,255,255,0.1);
+
+    z-index: 1000;
 }
 
 .logo {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 900;
-    letter-spacing: 2px;
 }
 
 .navbar nav {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 25px;
 }
 
-.navbar a,
-.navbar button {
+.navbar a {
     color: white;
     text-decoration: none;
+    font-weight: bold;
+}
 
-    background: transparent;
+.navbar a:hover {
+    opacity: 0.7;
+}
 
+.navbar button {
     border: none;
 
-    padding: 10px 15px;
+    padding: 10px 18px;
+
+    border-radius: 10px;
+
+    background: #168cff;
+
+    color: white;
 
     font-weight: bold;
 
     cursor: pointer;
-
-    border-radius: 8px;
-}
-
-.navbar a:hover,
-.navbar button:hover {
-    background: rgba(255,255,255,0.12);
 }
 
 
-/* =========================
+/* =====================================================
    HERO
-========================= */
+===================================================== */
 
 .hero {
     min-height: 100vh;
-
-    position: relative;
 
     display: flex;
     align-items: center;
@@ -92,181 +96,164 @@ body {
 
     text-align: center;
 
-    background-image: url("background.png");
+    padding: 120px 20px 60px;
+
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,0.35),
+            rgba(0,0,0,0.75)
+        ),
+        url("background.png");
 
     background-size: cover;
     background-position: center;
 
-    overflow: hidden;
-}
-
-.hero-overlay {
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            rgba(0,0,0,0.3),
-            rgba(0,0,0,0.85)
-        );
+    background-attachment: fixed;
 }
 
 .hero-content {
-    position: relative;
+    max-width: 950px;
 
-    z-index: 2;
+    padding: 50px 30px;
 
-    width: 90%;
-    max-width: 1000px;
+    background: rgba(0,0,0,0.35);
+
+    border-radius: 30px;
+
+    backdrop-filter: blur(5px);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.5);
 }
 
-.server-badge {
+.badge {
     display: inline-block;
 
     padding: 10px 18px;
 
-    background: rgba(0, 255, 100, 0.15);
+    border-radius: 30px;
 
-    border: 1px solid rgba(0,255,100,0.5);
+    background: rgba(0,153,255,0.25);
 
-    border-radius: 50px;
-
-    color: #00ff88;
-
-    font-weight: bold;
+    border: 1px solid rgba(0,153,255,0.6);
 
     margin-bottom: 25px;
 }
 
 .hero h1 {
-    font-size: clamp(45px, 8vw, 110px);
+    font-size: clamp(45px, 8vw, 100px);
 
     font-weight: 1000;
 
     text-shadow:
-        0 5px 0 #111,
-        0 10px 30px rgba(0,0,0,0.8);
-
-    letter-spacing: 2px;
+        5px 5px 0 #111,
+        0 0 30px rgba(0,150,255,0.8);
 }
 
 .hero p {
-    font-size: 24px;
+    font-size: 22px;
 
-    margin: 20px 0 35px;
+    margin-top: 20px;
 
     color: #ddd;
 }
 
-.server-ip-box {
-    margin: auto;
+.hero-buttons {
+    margin-top: 40px;
 
-    max-width: 600px;
+    display: flex;
 
-    padding: 20px;
+    justify-content: center;
 
-    background: rgba(0,0,0,0.65);
+    gap: 15px;
 
-    border: 1px solid rgba(255,255,255,0.2);
-
-    border-radius: 15px;
-
-    backdrop-filter: blur(10px);
+    flex-wrap: wrap;
 }
 
-.server-ip-box span {
-    display: block;
-
-    font-size: 12px;
-
-    color: #aaa;
-
-    margin-bottom: 8px;
-}
-
-.server-ip-box strong {
-    display: block;
-
-    font-size: 25px;
-
-    margin-bottom: 15px;
-}
-
-.server-ip-box button {
-    padding: 12px 20px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-weight: bold;
-}
-
-.main-button {
-    display: inline-block;
-
-    margin-top: 30px;
-
-    padding: 17px 35px;
-
-    background: #1597ff;
-
-    color: white;
-
-    text-decoration: none;
+.main-button,
+.second-button {
+    padding: 16px 25px;
 
     border-radius: 12px;
 
-    font-weight: 900;
+    text-decoration: none;
 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    font-weight: bold;
 
     transition: 0.2s;
 }
 
-.main-button:hover {
-    transform: translateY(-3px);
+.main-button {
+    background: #168cff;
 
-    background: #0088ff;
+    color: white;
+}
+
+.second-button {
+    background: rgba(255,255,255,0.15);
+
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.main-button:hover,
+.second-button:hover {
+    transform: translateY(-3px);
 }
 
 
-/* =========================
+/* =====================================================
    SECTIONS
-========================= */
+===================================================== */
 
 .section {
-    padding: 100px 6%;
+    padding: 100px 7%;
 
-    text-align: center;
+    background: #07111f;
 }
 
 .dark-section {
-    background: #090909;
+    background: #040b15;
 }
 
-.section h2 {
+.section-title {
+    text-align: center;
+
+    max-width: 800px;
+
+    margin: auto;
+
+    margin-bottom: 50px;
+}
+
+.section-title span {
+    color: #168cff;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+}
+
+.section-title h2 {
     font-size: 45px;
 
-    margin-bottom: 12px;
+    margin: 12px 0;
 }
 
-.section-description {
-    color: #aaa;
+.section-title p {
+    color: #aeb7c5;
 
-    margin-bottom: 45px;
+    font-size: 18px;
 }
 
 
-/* =========================
-   STATUS
-========================= */
+/* =====================================================
+   SERVER
+===================================================== */
 
-.status-card {
-    max-width: 700px;
+.server-card {
+    max-width: 1000px;
 
     margin: auto;
 
@@ -276,45 +263,102 @@ body {
 
     align-items: center;
 
-    justify-content: center;
-
     gap: 25px;
 
-    background: #111;
+    background: rgba(255,255,255,0.06);
 
-    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
 
-    border: 1px solid #292929;
+    border-radius: 25px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.25);
+}
+
+.server-icon {
+    font-size: 55px;
+}
+
+.server-information {
+    flex: 1;
+}
+
+.server-information h3 {
+    font-size: 25px;
+}
+
+.domain {
+    margin-top: 8px;
+
+    color: #8f9bab;
+
+    font-family: monospace;
+}
+
+.status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+    font-weight: bold;
 }
 
 .status-circle {
-    font-size: 45px;
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    display: inline-block;
 }
 
 .status-circle.online {
-    color: #00ff75;
+    background: #24d36b;
+
+    box-shadow:
+        0 0 15px #24d36b;
 }
 
 .status-circle.offline {
-    color: #ff3333;
+    background: #ff334f;
+
+    box-shadow:
+        0 0 15px #ff334f;
 }
 
 .status-circle.maintenance {
-    color: #ffc400;
+    background: #ffc107;
+
+    box-shadow:
+        0 0 15px #ffc107;
 }
 
-.status-card h3 {
-    font-size: 25px;
+.copy-button {
+    padding: 14px 20px;
 
-    margin-bottom: 8px;
+    border: none;
+
+    border-radius: 12px;
+
+    background: #168cff;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
 }
 
 
-/* =========================
-   SOCIAL CARDS
-========================= */
+/* =====================================================
+   SOCIAL
+===================================================== */
 
-.cards {
+.social-grid {
     max-width: 1100px;
 
     margin: auto;
@@ -322,31 +366,33 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
+        repeat(3, 1fr);
 
     gap: 20px;
 }
 
 .social-card {
-    padding: 35px 20px;
+    padding: 40px 25px;
 
-    background: #111;
-
-    color: white;
+    text-align: center;
 
     text-decoration: none;
 
-    border-radius: 20px;
+    color: white;
 
-    border: 1px solid #252525;
+    border-radius: 25px;
 
-    transition: 0.2s;
+    background: rgba(255,255,255,0.06);
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    transition: 0.25s;
 }
 
 .social-card:hover {
     transform: translateY(-8px);
 
-    border-color: #555;
+    background: rgba(255,255,255,0.1);
 }
 
 .social-icon {
@@ -357,377 +403,447 @@ body {
 
 .social-card h3 {
     font-size: 25px;
-
-    margin-bottom: 10px;
 }
 
 .social-card p {
-    color: #aaa;
+    margin-top: 8px;
+
+    color: #9da8b7;
 }
 
 
-/* =========================
+/* =====================================================
    WUNSCHLISTE
-========================= */
+===================================================== */
 
-.wishlist-container {
-    max-width: 900px;
-
-    margin: auto;
-
-    display: grid;
-
-    gap: 15px;
-}
-
-.wishlist-item {
-    text-align: left;
-
-    padding: 25px;
-
-    background: #111;
-
-    border-radius: 15px;
-
-    border-left: 4px solid #1597ff;
-}
-
-.wishlist-item h3 {
-    margin-bottom: 8px;
-}
-
-.wishlist-item p {
-    color: #aaa;
-}
-
-
-/* =========================
-   INFO
-========================= */
-
-.info-grid {
-    max-width: 1100px;
+.wish-box {
+    max-width: 800px;
 
     margin: auto;
 
-    display: grid;
+    display: flex;
 
-    grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-
-    gap: 20px;
+    gap: 10px;
 }
 
-.info-card {
-    padding: 35px 20px;
+.wish-box input {
+    flex: 1;
 
-    background: #111;
+    padding: 17px;
 
-    border-radius: 20px;
+    border-radius: 12px;
 
-    border: 1px solid #222;
-}
+    border: 1px solid rgba(255,255,255,0.15);
 
-.info-card span {
-    font-size: 40px;
-}
-
-.info-card h3 {
-    margin: 15px 0 10px;
-
-    font-size: 23px;
-}
-
-.info-card p {
-    color: #aaa;
-
-    line-height: 1.5;
-}
-
-
-/* =========================
-   OVERLAY
-========================= */
-
-.overlay {
-    display: none;
-
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0,0,0,0.85);
-
-    backdrop-filter: blur(10px);
-
-    z-index: 5000;
-
-    overflow-y: auto;
-
-    padding: 40px 15px;
-}
-
-.login-box,
-.owner-panel {
-    position: relative;
-
-    width: 100%;
-
-    max-width: 700px;
-
-    margin: auto;
-
-    background: #111;
-
-    border: 1px solid #333;
-
-    border-radius: 20px;
-
-    padding: 35px;
-
-    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-}
-
-.login-box {
-    max-width: 450px;
-
-    margin-top: 100px;
-
-    text-align: center;
-}
-
-.login-box h2,
-.owner-panel h2 {
-    font-size: 35px;
-
-    margin-bottom: 10px;
-}
-
-.login-box > p {
-    color: #999;
-
-    margin-bottom: 25px;
-}
-
-.close-button {
-    position: absolute;
-
-    top: 15px;
-    right: 18px;
-
-    background: transparent;
+    background: #101d2e;
 
     color: white;
-
-    border: none;
-
-    font-size: 30px;
-
-    cursor: pointer;
-}
-
-input,
-select {
-    width: 100%;
-
-    padding: 14px;
-
-    margin: 7px 0 15px;
-
-    background: #181818;
-
-    color: white;
-
-    border: 1px solid #333;
-
-    border-radius: 8px;
 
     outline: none;
 }
 
-input:focus,
-select:focus {
-    border-color: #1597ff;
-}
-
-.login-button,
-.admin-box button {
-    width: 100%;
-
-    padding: 14px;
-
-    background: #1597ff;
-
-    color: white;
+.wish-box button {
+    padding: 17px 22px;
 
     border: none;
 
-    border-radius: 8px;
+    border-radius: 12px;
+
+    background: #168cff;
+
+    color: white;
 
     font-weight: bold;
 
     cursor: pointer;
 }
 
-.login-button:hover,
-.admin-box button:hover {
-    background: #0088ff;
+.wish-list {
+    max-width: 800px;
+
+    margin: 30px auto 0;
 }
 
-.error {
-    color: #ff4444 !important;
+.wish-item {
+    display: flex;
 
-    margin-top: 15px;
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px;
+
+    margin-bottom: 10px;
+
+    background: rgba(255,255,255,0.06);
+
+    border-radius: 12px;
 }
 
 
-/* =========================
-   ADMIN BOX
-========================= */
+/* =====================================================
+   LOGIN
+===================================================== */
 
-.panel-description {
-    color: #999;
+.modal {
+    position: fixed;
 
-    margin-bottom: 25px;
+    inset: 0;
+
+    background: rgba(0,0,0,0.75);
+
+    backdrop-filter: blur(10px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 5000;
+
+    padding: 20px;
 }
 
-.admin-box {
-    margin-top: 20px;
-
-    padding: 25px;
-
-    background: #181818;
-
-    border-radius: 15px;
-
-    border: 1px solid #292929;
-
-    text-align: left;
+.hidden {
+    display: none !important;
 }
 
-.admin-box h3 {
+.modal-box {
+    width: 100%;
+
+    max-width: 430px;
+
+    padding: 35px;
+
+    background: #0c1929;
+
+    border-radius: 25px;
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    position: relative;
+}
+
+.modal-box h2 {
+    margin-bottom: 10px;
+}
+
+.modal-box p {
+    color: #9da8b7;
+
     margin-bottom: 20px;
 }
 
-.admin-box label {
-    display: block;
-
-    color: #aaa;
-
-    font-size: 14px;
-
-    margin-top: 10px;
-}
-
-.admin-box button {
-    margin-top: 5px;
-}
-
-.admin-wishlist-item {
-    margin-top: 15px;
+.modal-box input {
+    width: 100%;
 
     padding: 15px;
 
-    background: #0c0c0c;
+    margin-bottom: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #16263b;
+
+    color: white;
+
+    outline: none;
+}
+
+.close {
+    position: absolute;
+
+    right: 20px;
+    top: 20px;
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.login-button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #168cff;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.login-error {
+    color: #ff5368 !important;
+
+    margin-top: 15px;
+}
+
+
+/* =====================================================
+   OWNER PANEL
+===================================================== */
+
+.owner-panel {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 4000;
+
+    overflow-y: auto;
+
+    background: #07111f;
+}
+
+.owner-header {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    padding: 25px 6%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background: rgba(5,12,25,0.95);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.owner-header span {
+    color: #168cff;
+
+    font-weight: bold;
+}
+
+.owner-header h2 {
+    margin-top: 5px;
+}
+
+.owner-header button {
+    padding: 12px 18px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #d9324b;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.owner-content {
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 50px 20px;
+}
+
+.admin-card {
+    padding: 30px;
+
+    margin-bottom: 20px;
+
+    background: rgba(255,255,255,0.06);
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    border-radius: 20px;
+}
+
+.admin-card h3 {
+    margin-bottom: 25px;
+
+    font-size: 24px;
+}
+
+.admin-card label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    margin-top: 18px;
+
+    color: #b8c1cf;
+
+    font-weight: bold;
+}
+
+.admin-card input,
+.admin-card textarea,
+.admin-card select {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #101d2e;
+
+    color: white;
+
+    outline: none;
+}
+
+.admin-card textarea {
+    min-height: 100px;
+
+    resize: vertical;
+}
+
+.admin-card > button {
+    margin-top: 20px;
+
+    padding: 14px 20px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #168cff;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.admin-wish {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 15px;
+
+    margin-bottom: 8px;
+
+    background: #101d2e;
 
     border-radius: 10px;
 }
 
-.admin-wishlist-item button {
-    margin-top: 10px;
-
-    background: #d93030;
-}
-
-.admin-wishlist-item button:hover {
-    background: #ff4444;
-}
-
-.logout-button {
-    width: 100%;
-
-    margin-top: 25px;
-
-    padding: 14px;
-
-    background: #d93030;
-
-    color: white;
-
+.admin-wish button {
     border: none;
 
     border-radius: 8px;
 
-    font-weight: bold;
+    padding: 8px 12px;
+
+    background: #d9324b;
+
+    color: white;
 
     cursor: pointer;
 }
 
+.information {
+    border-left: 4px solid #168cff;
+}
 
-/* =========================
+
+/* =====================================================
    FOOTER
-========================= */
+===================================================== */
 
 footer {
-    padding: 60px 20px;
+    padding: 40px 20px;
 
     text-align: center;
 
-    background: #030303;
-}
+    background: #030811;
 
-footer h3 {
-    font-size: 25px;
-
-    margin-bottom: 10px;
+    color: #8490a0;
 }
 
 footer p {
-    color: #888;
-}
-
-.copyright {
-    margin-top: 25px;
-
-    font-size: 13px;
+    margin: 5px;
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* =====================================================
+   HANDY
+===================================================== */
 
-@media (max-width: 750px) {
+@media (max-width: 800px) {
 
     .navbar {
+        position: absolute;
+
         flex-direction: column;
 
-        gap: 10px;
+        gap: 15px;
     }
 
     .navbar nav {
+        gap: 12px;
+
         flex-wrap: wrap;
 
         justify-content: center;
     }
 
-    .hero h1 {
-        font-size: 48px;
+    .hero {
+        padding-top: 180px;
     }
 
-    .hero p {
-        font-size: 18px;
+    .server-card {
+        flex-direction: column;
+
+        text-align: center;
     }
 
-    .status-card {
+    .social-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wish-box {
         flex-direction: column;
     }
 
-    .section {
-        padding: 70px 5%;
+    .wish-item {
+        flex-direction: column;
+
+        align-items: flex-start;
     }
 
-    .section h2 {
-        font-size: 34px;
+    .hero h1 {
+        font-size: 50px;
     }
 }
