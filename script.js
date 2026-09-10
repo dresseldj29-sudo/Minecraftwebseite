@@ -1,43 +1,154 @@
-// =====================================================
-// MINECRAFT SERVER WEBSITE
-// SCRIPT
-// =====================================================
+/* =====================================================
+   OWNER EINSTELLUNGEN
+
+   WICHTIG:
+   Alles hier ist öffentlich im Webseiten-Code sichtbar.
+
+   Benutze deshalb NICHT dein normales
+   Google-/Gmail-Passwort.
+===================================================== */
+
+const OWNER_EMAIL = "ServerOwner@gmail.com";
+const OWNER_PASSWORD = "Server";
 
 
-// =====================================================
-// DATEN LADEN
-// =====================================================
+/* =====================================================
+   STANDARD DATEN
+===================================================== */
 
 let websiteData = JSON.parse(
     localStorage.getItem("minecraftWebsiteData")
 ) || {
 
-    server: {
-        domain: SERVER_CONFIG.domain,
+    domain: "play.deinserver.de",
 
-        version: SERVER_CONFIG.version,
+    version: "1.21.x",
 
-        maxPlayers: SERVER_CONFIG.maxPlayers,
+    players: "0 / 100",
 
-        players: 0,
+    status: "ONLINE",
 
-        status: "online"
-    },
+    discord:
+        "https://discord.gg/deinserver",
 
-    discord: "",
+    youtube: [
+        {
+            name: "Mein YouTube",
+            url: "https://youtube.com/"
+        }
+    ],
 
-    youtube: [],
-
-    tiktok: [],
+    tiktok: [
+        {
+            name: "Mein TikTok",
+            url: "https://tiktok.com/"
+        }
+    ],
 
     wishes: []
 
 };
 
 
-// =====================================================
-// DATEN SPEICHERN
-// =====================================================
+/* =====================================================
+   ELEMENTE
+===================================================== */
+
+const loginModal =
+    document.getElementById("loginModal");
+
+const ownerPanel =
+    document.getElementById("ownerPanel");
+
+
+/* =====================================================
+   LOGIN ÖFFNEN
+===================================================== */
+
+document
+    .getElementById("ownerButton")
+    .addEventListener("click", function() {
+
+        loginModal.classList.add("show");
+
+    });
+
+
+/* =====================================================
+   LOGIN SCHLIESSEN
+===================================================== */
+
+function closeLogin() {
+
+    loginModal.classList.remove("show");
+
+}
+
+
+/* =====================================================
+   OWNER LOGIN
+===================================================== */
+
+function loginOwner() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const error =
+        document.getElementById("loginError");
+
+
+    if (
+        email === OWNER_EMAIL &&
+        password === OWNER_PASSWORD
+    ) {
+
+        error.textContent = "";
+
+        loginModal.classList.remove("show");
+
+        ownerPanel.classList.add("show");
+
+        loadAdminPanel();
+
+    } else {
+
+        error.textContent =
+            "❌ E-Mail oder Passwort ist falsch.";
+
+    }
+
+}
+
+
+/* =====================================================
+   OWNER PANEL SCHLIESSEN
+===================================================== */
+
+function closeOwnerPanel() {
+
+    ownerPanel.classList.remove("show");
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logoutOwner() {
+
+    ownerPanel.classList.remove("show");
+
+}
+
+
+/* =====================================================
+   DATEN SPEICHERN
+===================================================== */
 
 function saveData() {
 
@@ -49,431 +160,68 @@ function saveData() {
 }
 
 
-// =====================================================
-// SEITE STARTEN
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadWebsite();
-
-        loadSocialLinks();
-
-        loadWishlist();
-
-        loadAdminLists();
-
-        checkOwnerSession();
-
-    }
-);
-
-
-// =====================================================
-// WEBSITE LADEN
-// =====================================================
-
-function loadWebsite() {
-
-    document.getElementById(
-        "navServerName"
-    ).textContent = SERVER_CONFIG.name;
-
-
-    document.getElementById(
-        "footerServerName"
-    ).textContent = SERVER_CONFIG.name;
-
-
-    document.getElementById(
-        "serverDomain"
-    ).textContent =
-        websiteData.server.domain;
-
-
-    document.getElementById(
-        "heroDomain"
-    ).textContent =
-        websiteData.server.domain;
-
-
-    document.getElementById(
-        "footerDomain"
-    ).textContent =
-        websiteData.server.domain;
-
-
-    document.getElementById(
-        "serverVersion"
-    ).textContent =
-        websiteData.server.version;
-
-
-    document.getElementById(
-        "serverPlayers"
-    ).textContent =
-        websiteData.server.players +
-        " / " +
-        websiteData.server.maxPlayers;
-
-
-    updateServerStatus();
-
-}
-
-
-// =====================================================
-// SERVER STATUS
-// =====================================================
-
-function updateServerStatus() {
-
-    const status =
-        websiteData.server.status;
-
-
-    const statusText =
-        document.getElementById(
-            "serverStatus"
-        );
-
-    const heroStatus =
-        document.getElementById(
-            "heroStatus"
-        );
-
-
-    const dot =
-        document.getElementById(
-            "serverStatusDot"
-        );
-
-    const heroDot =
-        document.getElementById(
-            "heroStatusDot"
-        );
-
-
-    dot.className =
-        "big-status-dot " +
-        status;
-
-    heroDot.className =
-        "status-dot " +
-        status;
-
-
-    if (status === "online") {
-
-        statusText.textContent =
-            "🟢 Online";
-
-        heroStatus.textContent =
-            "🟢 Server Online";
-
-    }
-
-    else if (status === "offline") {
-
-        statusText.textContent =
-            "🔴 Offline";
-
-        heroStatus.textContent =
-            "🔴 Server Offline";
-
-    }
-
-    else {
-
-        statusText.textContent =
-            "🟠 Wartung";
-
-        heroStatus.textContent =
-            "🟠 Wartung";
-
-    }
-
-}
-
-
-// =====================================================
-// SERVER ADRESSE KOPIEREN
-// =====================================================
-
-function copyServerAddress() {
-
-    navigator.clipboard.writeText(
-        websiteData.server.domain
-    );
-
-    alert(
-        "Server-Adresse wurde kopiert!"
-    );
-
-}
-
-
-// =====================================================
-// OWNER LOGIN ÖFFNEN
-// =====================================================
-
-function openOwnerLogin() {
-
-    document.getElementById(
-        "loginModal"
-    ).classList.add("active");
-
-}
-
-
-// =====================================================
-// OWNER LOGIN SCHLIESSEN
-// =====================================================
-
-function closeOwnerLogin() {
-
-    document.getElementById(
-        "loginModal"
-    ).classList.remove("active");
-
-}
-
-
-// =====================================================
-// OWNER LOGIN
-// =====================================================
-
-function ownerLogin() {
-
-    const email =
-        document.getElementById(
-            "ownerEmail"
-        ).value.trim();
-
-
-    const password =
-        document.getElementById(
-            "ownerPassword"
-        ).value;
-
-
-    const error =
-        document.getElementById(
-            "loginError"
-        );
-
-
-    if (
-        email === OWNER_CONFIG.email &&
-        password === OWNER_CONFIG.password
-    ) {
-
-        sessionStorage.setItem(
-            "ownerLoggedIn",
-            "true"
-        );
-
-
-        closeOwnerLogin();
-
-
-        document.getElementById(
-            "ownerPanel"
-        ).classList.add("active");
-
-
-        loadAdminSettings();
-
-        error.textContent = "";
-
-    }
-
-    else {
-
-        error.textContent =
-            "❌ E-Mail oder Passwort falsch.";
-
-    }
-
-}
-
-
-// =====================================================
-// OWNER SESSION PRÜFEN
-// =====================================================
-
-function checkOwnerSession() {
-
-    if (
-        sessionStorage.getItem(
-            "ownerLoggedIn"
-        ) === "true"
-    ) {
-
-        loadAdminSettings();
-
-    }
-
-}
-
-
-// =====================================================
-// OWNER PANEL SCHLIESSEN
-// =====================================================
-
-function closeOwnerPanel() {
-
-    document.getElementById(
-        "ownerPanel"
-    ).classList.remove("active");
-
-}
-
-
-// =====================================================
-// OWNER ABMELDEN
-// =====================================================
-
-function ownerLogout() {
-
-    sessionStorage.removeItem(
-        "ownerLoggedIn"
-    );
-
-    closeOwnerPanel();
-
-}
-
-
-// =====================================================
-// OWNER EINSTELLUNGEN LADEN
-// =====================================================
-
-function loadAdminSettings() {
-
-    document.getElementById(
-        "adminDomain"
-    ).value =
-        websiteData.server.domain;
-
-
-    document.getElementById(
-        "adminVersion"
-    ).value =
-        websiteData.server.version;
-
-
-    document.getElementById(
-        "adminMaxPlayers"
-    ).value =
-        websiteData.server.maxPlayers;
-
-
-    document.getElementById(
-        "adminStatus"
-    ).value =
-        websiteData.server.status;
-
-
-    document.getElementById(
-        "discordLink"
-    ).value =
-        websiteData.discord;
-
-}
-
-
-// =====================================================
-// SERVER SPEICHERN
-// =====================================================
+/* =====================================================
+   SERVER DATEN
+===================================================== */
 
 function saveServerSettings() {
 
-    websiteData.server.domain =
-        document.getElementById(
-            "adminDomain"
-        ).value.trim();
+    websiteData.domain =
+        document.getElementById("adminDomain").value;
 
+    websiteData.version =
+        document.getElementById("adminVersion").value;
 
-    websiteData.server.version =
-        document.getElementById(
-            "adminVersion"
-        ).value.trim();
+    websiteData.players =
+        document.getElementById("adminPlayers").value;
 
-
-    websiteData.server.maxPlayers =
-        Number(
-            document.getElementById(
-                "adminMaxPlayers"
-            ).value
-        );
-
-
-    websiteData.server.status =
-        document.getElementById(
-            "adminStatus"
-        ).value;
+    websiteData.status =
+        document.getElementById("adminStatus").value;
 
 
     saveData();
 
-    loadWebsite();
+    updateWebsite();
 
-    alert(
-        "✅ Server-Einstellungen gespeichert!"
-    );
+    alert("✅ Server wurde gespeichert.");
 
 }
 
 
-// =====================================================
-// DISCORD SPEICHERN
-// =====================================================
+/* =====================================================
+   DISCORD
+===================================================== */
 
 function saveDiscord() {
 
     websiteData.discord =
-        document.getElementById(
-            "discordLink"
-        ).value.trim();
-
+        document.getElementById("adminDiscord").value;
 
     saveData();
 
-    loadSocialLinks();
+    updateWebsite();
 
-    alert(
-        "✅ Discord gespeichert!"
-    );
+    alert("✅ Discord wurde gespeichert.");
 
 }
 
 
-// =====================================================
-// YOUTUBE HINZUFÜGEN
-// =====================================================
+/* =====================================================
+   YOUTUBE HINZUFÜGEN
+===================================================== */
 
 function addYouTube() {
 
     const name =
-        document.getElementById(
-            "youtubeName"
-        ).value.trim();
+        document.getElementById("youtubeName").value.trim();
+
+    const url =
+        document.getElementById("youtubeUrl").value.trim();
 
 
-    const link =
-        document.getElementById(
-            "youtubeLink"
-        ).value.trim();
+    if (!name || !url) {
 
-
-    if (!name || !link) {
-
-        alert(
-            "Bitte Name und Link eingeben."
-        );
+        alert("Bitte Name und Link eingeben.");
 
         return;
 
@@ -481,76 +229,57 @@ function addYouTube() {
 
 
     websiteData.youtube.push({
-
         name: name,
-
-        link: link
-
+        url: url
     });
 
 
+    document.getElementById("youtubeName").value = "";
+    document.getElementById("youtubeUrl").value = "";
+
+
     saveData();
 
-    document.getElementById(
-        "youtubeName"
-    ).value = "";
+    updateWebsite();
 
-
-    document.getElementById(
-        "youtubeLink"
-    ).value = "";
-
-
-    loadSocialLinks();
-
-    loadAdminLists();
+    loadAdminPanel();
 
 }
 
 
-// =====================================================
-// YOUTUBE LÖSCHEN
-// =====================================================
+/* =====================================================
+   YOUTUBE LÖSCHEN
+===================================================== */
 
 function deleteYouTube(index) {
 
-    websiteData.youtube.splice(
-        index,
-        1
-    );
+    websiteData.youtube.splice(index, 1);
 
     saveData();
 
-    loadSocialLinks();
+    updateWebsite();
 
-    loadAdminLists();
+    loadAdminPanel();
 
 }
 
 
-// =====================================================
-// TIKTOK HINZUFÜGEN
-// =====================================================
+/* =====================================================
+   TIKTOK HINZUFÜGEN
+===================================================== */
 
 function addTikTok() {
 
     const name =
-        document.getElementById(
-            "tiktokName"
-        ).value.trim();
+        document.getElementById("tiktokName").value.trim();
+
+    const url =
+        document.getElementById("tiktokUrl").value.trim();
 
 
-    const link =
-        document.getElementById(
-            "tiktokLink"
-        ).value.trim();
+    if (!name || !url) {
 
-
-    if (!name || !link) {
-
-        alert(
-            "Bitte Name und Link eingeben."
-        );
+        alert("Bitte Name und Link eingeben.");
 
         return;
 
@@ -558,495 +287,591 @@ function addTikTok() {
 
 
     websiteData.tiktok.push({
-
         name: name,
-
-        link: link
-
+        url: url
     });
+
+
+    document.getElementById("tiktokName").value = "";
+    document.getElementById("tiktokUrl").value = "";
 
 
     saveData();
 
+    updateWebsite();
 
-    document.getElementById(
-        "tiktokName"
-    ).value = "";
-
-
-    document.getElementById(
-        "tiktokLink"
-    ).value = "";
-
-
-    loadSocialLinks();
-
-    loadAdminLists();
+    loadAdminPanel();
 
 }
 
 
-// =====================================================
-// TIKTOK LÖSCHEN
-// =====================================================
+/* =====================================================
+   TIKTOK LÖSCHEN
+===================================================== */
 
 function deleteTikTok(index) {
 
-    websiteData.tiktok.splice(
-        index,
-        1
-    );
+    websiteData.tiktok.splice(index, 1);
 
     saveData();
 
-    loadSocialLinks();
+    updateWebsite();
 
-    loadAdminLists();
+    loadAdminPanel();
 
 }
 
 
-// =====================================================
-// SOCIAL LINKS ANZEIGEN
-// =====================================================
+/* =====================================================
+   WEBSITE AKTUALISIEREN
+===================================================== */
 
-function loadSocialLinks() {
+function updateWebsite() {
 
-    const container =
-        document.getElementById(
-            "socialLinks"
-        );
-
-
-    container.innerHTML = "";
+    document.getElementById(
+        "serverDomain"
+    ).textContent =
+        websiteData.domain;
 
 
-    // DISCORD
+    document.getElementById(
+        "serverVersion"
+    ).textContent =
+        websiteData.version;
 
-    if (websiteData.discord) {
 
-        container.innerHTML += `
+    document.getElementById(
+        "playerCount"
+    ).textContent =
+        websiteData.players;
 
-            <a
-                class="social-card"
-                href="${websiteData.discord}"
-                target="_blank"
-                rel="noopener"
-            >
 
-                <div class="social-icon">
-                    💬
-                </div>
+    document.getElementById(
+        "serverStatus"
+    ).textContent =
+        websiteData.status;
 
-                <h3>Discord</h3>
 
-                <p>
-                    Komm auf unseren Discord-Server.
-                </p>
+    document.getElementById(
+        "discordLink"
+    ).href =
+        websiteData.discord;
 
-                <span>
-                    Discord öffnen →
-                </span>
 
-            </a>
+    updateStatus();
 
-        `;
+    updateYouTube();
+
+    updateTikTok();
+
+    updateWishes();
+
+}
+
+
+/* =====================================================
+   SERVER STATUS
+===================================================== */
+
+function updateStatus() {
+
+    const circle =
+        document.getElementById("statusCircle");
+
+
+    if (websiteData.status === "ONLINE") {
+
+        circle.style.background = "#18e56b";
+
+        circle.style.boxShadow =
+            "0 0 20px #18e56b";
 
     }
 
 
-    // YOUTUBE
+    if (websiteData.status === "OFFLINE") {
 
-    websiteData.youtube.forEach(
-        function(channel) {
+        circle.style.background = "#ff3344";
 
-            container.innerHTML += `
+        circle.style.boxShadow =
+            "0 0 20px #ff3344";
 
-                <a
-                    class="social-card"
-                    href="${channel.link}"
-                    target="_blank"
-                    rel="noopener"
-                >
-
-                    <div class="social-icon">
-                        ▶️
-                    </div>
-
-                    <h3>
-                        ${escapeHTML(channel.name)}
-                    </h3>
-
-                    <p>
-                        YouTube-Kanal
-                    </p>
-
-                    <span>
-                        Kanal öffnen →
-                    </span>
-
-                </a>
-
-            `;
-
-        }
-    );
+    }
 
 
-    // TIKTOK
+    if (websiteData.status === "WARTUNG") {
 
-    websiteData.tiktok.forEach(
-        function(channel) {
+        circle.style.background = "#ffc400";
 
-            container.innerHTML += `
-
-                <a
-                    class="social-card"
-                    href="${channel.link}"
-                    target="_blank"
-                    rel="noopener"
-                >
-
-                    <div class="social-icon">
-                        🎵
-                    </div>
-
-                    <h3>
-                        ${escapeHTML(channel.name)}
-                    </h3>
-
-                    <p>
-                        TikTok-Kanal
-                    </p>
-
-                    <span>
-                        TikTok öffnen →
-                    </span>
-
-                </a>
-
-            `;
-
-        }
-    );
-
-
-    if (
-        websiteData.discord.length === 0 &&
-        websiteData.youtube.length === 0 &&
-        websiteData.tiktok.length === 0
-    ) {
-
-        container.innerHTML = `
-
-            <div class="social-card">
-
-                <div class="social-icon">
-                    🌐
-                </div>
-
-                <h3>
-                    Unsere Social Media
-                </h3>
-
-                <p>
-                    Die Owner haben noch keine
-                    Social-Media-Kanäle eingetragen.
-                </p>
-
-            </div>
-
-        `;
+        circle.style.boxShadow =
+            "0 0 20px #ffc400";
 
     }
 
 }
 
 
-// =====================================================
-// WUNSCH HINZUFÜGEN
-// =====================================================
+/* =====================================================
+   YOUTUBE
+===================================================== */
 
-function addWish() {
+function updateYouTube() {
 
-    const input =
-        document.getElementById(
-            "wishInput"
-        );
+    const list =
+        document.getElementById("youtubeList");
 
-
-    const text =
-        input.value.trim();
+    list.innerHTML = "";
 
 
-    if (!text) {
+    websiteData.youtube.forEach(function(channel) {
+
+        const a =
+            document.createElement("a");
+
+        a.className = "channel";
+
+        a.href = channel.url;
+
+        a.target = "_blank";
+
+        a.textContent =
+            "▶️ " + channel.name + " →";
+
+        list.appendChild(a);
+
+    });
+
+}
+
+
+/* =====================================================
+   TIKTOK
+===================================================== */
+
+function updateTikTok() {
+
+    const list =
+        document.getElementById("tiktokList");
+
+    list.innerHTML = "";
+
+
+    websiteData.tiktok.forEach(function(channel) {
+
+        const a =
+            document.createElement("a");
+
+        a.className = "channel";
+
+        a.href = channel.url;
+
+        a.target = "_blank";
+
+        a.textContent =
+            "🎵 " + channel.name + " →";
+
+        list.appendChild(a);
+
+    });
+
+}
+
+
+/* =====================================================
+   WUNSCH ABSENDEN
+===================================================== */
+
+document
+    .getElementById("wishForm")
+    .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document
+                .getElementById("wishName")
+                .value
+                .trim();
+
+
+        const wish =
+            document
+                .getElementById("wishText")
+                .value
+                .trim();
+
+
+        if (!name || !wish) {
+
+            return;
+
+        }
+
+
+        websiteData.wishes.push({
+
+            name: name,
+
+            wish: wish,
+
+            date:
+                new Date().toLocaleDateString("de-DE")
+
+        });
+
+
+        saveData();
+
+        updateWebsite();
+
+
+        document
+            .getElementById("wishName")
+            .value = "";
+
+
+        document
+            .getElementById("wishText")
+            .value = "";
+
 
         alert(
-            "Bitte zuerst einen Wunsch eingeben."
+            "✅ Dein Wunsch wurde gespeichert!"
         );
-
-        return;
-
-    }
-
-
-    websiteData.wishes.unshift({
-
-        text: text,
-
-        date:
-            new Date().toLocaleString(
-                "de-DE"
-            )
 
     });
 
 
-    saveData();
+/* =====================================================
+   WÜNSCHE ANZEIGEN
+===================================================== */
+
+function updateWishes() {
+
+    const list =
+        document.getElementById("wishList");
+
+    list.innerHTML = "";
 
 
-    input.value = "";
+    if (websiteData.wishes.length === 0) {
 
-
-    loadWishlist();
-
-    loadAdminLists();
-
-}
-
-
-// =====================================================
-// WUNSCHLISTE
-// =====================================================
-
-function loadWishlist() {
-
-    const container =
-        document.getElementById(
-            "wishlist"
-        );
-
-
-    container.innerHTML = "";
-
-
-    if (
-        websiteData.wishes.length === 0
-    ) {
-
-        container.innerHTML = `
-
-            <div class="wish">
-
-                💡 Noch keine Wünsche vorhanden.
-
-            </div>
-
-        `;
+        list.innerHTML =
+            '<div class="wish">' +
+            'Noch keine Wünsche vorhanden.' +
+            '</div>';
 
         return;
 
     }
 
 
-    websiteData.wishes.forEach(
-        function(wish) {
+    websiteData.wishes
+        .slice()
+        .reverse()
+        .forEach(function(item) {
 
-            container.innerHTML += `
+            const div =
+                document.createElement("div");
 
-                <div class="wish">
-
-                    💡
-                    ${escapeHTML(wish.text)}
-
-                    <div class="wish-date">
-                        ${escapeHTML(wish.date)}
-                    </div>
-
-                </div>
-
-            `;
-
-        }
-    );
-
-}
+            div.className = "wish";
 
 
-// =====================================================
-// ALLE WÜNSCHE LÖSCHEN
-// =====================================================
+            const strong =
+                document.createElement("strong");
 
-function deleteAllWishes() {
-
-    if (
-        !confirm(
-            "Wirklich alle Wünsche löschen?"
-        )
-    ) {
-
-        return;
-
-    }
+            strong.textContent =
+                item.name;
 
 
-    websiteData.wishes = [];
+            const span =
+                document.createElement("span");
 
-    saveData();
+            span.textContent =
+                item.wish +
+                " • " +
+                item.date;
 
-    loadWishlist();
 
-    loadAdminLists();
+            div.appendChild(strong);
+
+            div.appendChild(span);
+
+            list.appendChild(div);
+
+        });
 
 }
 
 
-// =====================================================
-// ADMIN LISTEN
-// =====================================================
+/* =====================================================
+   OWNER PANEL LADEN
+===================================================== */
 
-function loadAdminLists() {
+function loadAdminPanel() {
 
-    const youtube =
+    document.getElementById(
+        "adminDomain"
+    ).value =
+        websiteData.domain;
+
+
+    document.getElementById(
+        "adminVersion"
+    ).value =
+        websiteData.version;
+
+
+    document.getElementById(
+        "adminPlayers"
+    ).value =
+        websiteData.players;
+
+
+    document.getElementById(
+        "adminStatus"
+    ).value =
+        websiteData.status;
+
+
+    document.getElementById(
+        "adminDiscord"
+    ).value =
+        websiteData.discord;
+
+
+    loadAdminYouTube();
+
+    loadAdminTikTok();
+
+    loadAdminWishes();
+
+}
+
+
+/* =====================================================
+   ADMIN YOUTUBE
+===================================================== */
+
+function loadAdminYouTube() {
+
+    const list =
         document.getElementById(
             "adminYoutubeList"
         );
 
-
-    youtube.innerHTML = "";
+    list.innerHTML = "";
 
 
     websiteData.youtube.forEach(
         function(channel, index) {
 
-            youtube.innerHTML += `
+            const div =
+                document.createElement("div");
 
-                <div class="admin-item">
+            div.className =
+                "admin-item";
 
-                    <div class="admin-item-info">
 
-                        <strong>
-                            ▶️
-                            ${escapeHTML(channel.name)}
-                        </strong>
+            div.innerHTML =
+                `
+                <span>
+                    ▶️ ${escapeHTML(channel.name)}
+                </span>
 
-                        <small>
-                            ${escapeHTML(channel.link)}
-                        </small>
+                <button
+                    class="delete-button"
+                    onclick="deleteYouTube(${index})">
 
-                    </div>
+                    Löschen
 
-                    <button
-                        class="delete-button"
-                        onclick="deleteYouTube(${index})"
-                    >
-                        Löschen
-                    </button>
+                </button>
+                `;
 
-                </div>
 
-            `;
+            list.appendChild(div);
 
         }
     );
 
+}
 
-    const tiktok =
+
+/* =====================================================
+   ADMIN TIKTOK
+===================================================== */
+
+function loadAdminTikTok() {
+
+    const list =
         document.getElementById(
             "adminTiktokList"
         );
 
-
-    tiktok.innerHTML = "";
+    list.innerHTML = "";
 
 
     websiteData.tiktok.forEach(
         function(channel, index) {
 
-            tiktok.innerHTML += `
+            const div =
+                document.createElement("div");
 
-                <div class="admin-item">
+            div.className =
+                "admin-item";
 
-                    <div class="admin-item-info">
 
-                        <strong>
-                            🎵
-                            ${escapeHTML(channel.name)}
-                        </strong>
+            div.innerHTML =
+                `
+                <span>
+                    🎵 ${escapeHTML(channel.name)}
+                </span>
 
-                        <small>
-                            ${escapeHTML(channel.link)}
-                        </small>
+                <button
+                    class="delete-button"
+                    onclick="deleteTikTok(${index})">
 
-                    </div>
+                    Löschen
 
-                    <button
-                        class="delete-button"
-                        onclick="deleteTikTok(${index})"
-                    >
-                        Löschen
-                    </button>
+                </button>
+                `;
 
-                </div>
 
-            `;
+            list.appendChild(div);
 
         }
     );
 
+}
 
-    const wishes =
+
+/* =====================================================
+   ADMIN WÜNSCHE
+===================================================== */
+
+function loadAdminWishes() {
+
+    const list =
         document.getElementById(
             "adminWishList"
         );
 
+    list.innerHTML = "";
 
-    wishes.innerHTML = "";
+
+    if (websiteData.wishes.length === 0) {
+
+        list.innerHTML =
+            "<p>Noch keine Wünsche.</p>";
+
+        return;
+
+    }
 
 
-    websiteData.wishes.forEach(
-        function(wish) {
+    websiteData.wishes
+        .slice()
+        .reverse()
+        .forEach(function(item, reversedIndex) {
 
-            wishes.innerHTML += `
+            const realIndex =
+                websiteData.wishes.length -
+                1 -
+                reversedIndex;
 
-                <div class="admin-item">
 
-                    <div class="admin-item-info">
+            const div =
+                document.createElement("div");
 
-                        <strong>
-                            💡
-                            ${escapeHTML(wish.text)}
-                        </strong>
+            div.className =
+                "admin-wish";
 
-                        <small>
-                            ${escapeHTML(wish.date)}
-                        </small>
 
-                    </div>
+            div.innerHTML =
+                `
+                <strong>
+                    ${escapeHTML(item.name)}
+                </strong>
 
-                </div>
+                <p>
+                    ${escapeHTML(item.wish)}
+                </p>
 
-            `;
+                <small>
+                    ${escapeHTML(item.date)}
+                </small>
 
-        }
+                <br>
+
+                <button
+                    onclick="deleteWish(${realIndex})">
+
+                    Wunsch löschen
+
+                </button>
+                `;
+
+
+            list.appendChild(div);
+
+        });
+
+}
+
+
+/* =====================================================
+   WUNSCH LÖSCHEN
+===================================================== */
+
+function deleteWish(index) {
+
+    websiteData.wishes.splice(index, 1);
+
+    saveData();
+
+    updateWebsite();
+
+    loadAdminPanel();
+
+}
+
+
+/* =====================================================
+   HTML SICHER MACHEN
+===================================================== */
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================================
+   SERVER-IP KOPIEREN
+===================================================== */
+
+function copyServerIP() {
+
+    navigator.clipboard.writeText(
+        websiteData.domain
+    );
+
+    alert(
+        "📋 Server-Adresse kopiert!"
     );
 
 }
 
 
-// =====================================================
-// SICHERHEIT: HTML TEXT ENTSCHÄRFEN
-// =====================================================
+/* =====================================================
+   START
+===================================================== */
 
-function escapeHTML(text) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent = text;
-
-    return div.innerHTML;
-
-}
+updateWebsite();
