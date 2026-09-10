@@ -19,9 +19,9 @@
    OWNER LOGIN
 ========================= */
 
-const OWNER_EMAIL = "deine-email@gmail.com";
+const OWNER_EMAIL = "Server@gmail.com";
 
-const OWNER_PASSWORD = "DEIN_PASSWORT";
+const OWNER_PASSWORD = "Server";
 
 
 /* =========================
