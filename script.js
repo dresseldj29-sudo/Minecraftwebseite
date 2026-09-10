@@ -31,7 +31,7 @@
    NICHT dein Gmail-Passwort!
    ========================================================= */
 
-const OWNER_EMAIL = "Owner";
+const OWNER_EMAIL = "ServerOwner@gmail.com";
 
 const OWNER_PASSWORD = "Server";
 
