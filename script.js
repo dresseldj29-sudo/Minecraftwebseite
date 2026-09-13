@@ -16,11 +16,11 @@
 ========================================================= */
 
 const OWNER_EMAIL =
-    "deine-email@gmail.com";
+    "serverowner@gmail.com";
 
 
 const OWNER_PASSWORD =
-    "MeinOwnerPasswort123!";
+    "Server!";
 
 
 /* =========================================================
