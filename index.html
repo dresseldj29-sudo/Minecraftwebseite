@@ -5,15 +5,15 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <meta name="description"
-          content="Unser Minecraft Server">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Minecraft Server</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css">
 
 </head>
 
@@ -36,20 +36,9 @@
 
 <header class="navbar">
 
-    <div class="nav-logo">
-
-        <div class="logo-icon">
-            ⛏
-        </div>
-
-        <div>
-
-            <strong>MINECRAFT</strong>
-
-            <span>SERVER</span>
-
-        </div>
-
+    <div class="logo">
+        ⛏️ MINECRAFT
+        <span>SERVER</span>
     </div>
 
 
@@ -59,12 +48,12 @@
             Start
         </a>
 
-        <a href="#status">
+        <a href="#server">
             Server
         </a>
 
         <a href="#social">
-            Social
+            Community
         </a>
 
         <a href="#wishlist">
@@ -85,184 +74,192 @@
 </header>
 
 
-
 <!-- =====================================================
-     HERO
+     STARTSEITE
 ===================================================== -->
 
-<section id="home" class="hero">
+<main id="home">
+
+
+<section class="hero">
 
     <div class="hero-content">
 
-
-        <div class="hero-badge">
-
-            🟢 SERVER COMMUNITY
-
+        <div class="small-title">
+            WILLKOMMEN AUF UNSEREM SERVER
         </div>
 
 
         <h1>
-
             MINECRAFT
-
-            <span>
-                SERVER
-            </span>
-
+            <span>SERVER</span>
         </h1>
 
 
-        <p class="hero-subtitle">
+        <p class="hero-text">
 
             Gemeinsam mehr erleben.
-
-            <br>
-
-            Baue deine Welt.
-            Spiele mit deinen Freunden.
-            Werde Teil unserer Community.
+            Baue deine Welt, spiele mit Freunden
+            und werde Teil unserer Community.
 
         </p>
 
 
-        <!-- SERVER DOMAIN -->
+        <div class="hero-buttons">
 
-        <div class="domain-card">
+            <a
+                href="#server"
+                class="main-button">
 
-            <div>
+                🎮 SERVER ANSEHEN
 
-                <small>
-                    UNSERE SERVER-DOMAIN
-                </small>
+            </a>
 
-                <strong id="serverDomain">
-                    play.deinserver.de
-                </strong>
+
+            <a
+                href="#social"
+                class="second-button">
+
+                💬 COMMUNITY
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SERVER
+===================================================== -->
+
+<section
+    id="server"
+    class="section">
+
+
+    <div class="section-title">
+
+        <span>SERVER</span>
+
+        <h2>
+            Unser Minecraft Server
+        </h2>
+
+        <p>
+            Alles Wichtige auf einen Blick.
+        </p>
+
+    </div>
+
+
+    <div class="server-grid">
+
+
+        <!-- STATUS -->
+
+        <div class="server-card status-card">
+
+            <div class="card-icon">
+                🟢
+            </div>
+
+            <h3>
+                Serverstatus
+            </h3>
+
+
+            <div
+                id="statusIcon"
+                class="big-status-icon">
+
+                🟢
 
             </div>
 
 
-            <button onclick="copyDomain()">
+            <h4 id="statusTitle">
+                Server ist online
+            </h4>
 
-                📋 KOPIEREN
+
+            <p id="statusDescription">
+
+                Unser Minecraft Server
+                ist momentan erreichbar.
+
+            </p>
+
+        </div>
+
+
+        <!-- DOMAIN -->
+
+        <div class="server-card">
+
+            <div class="card-icon">
+                🌐
+            </div>
+
+            <h3>
+                Server-Adresse
+            </h3>
+
+
+            <div
+                id="serverDomain"
+                class="domain">
+
+                play.deinserver.de
+
+            </div>
+
+
+            <button
+                class="copy-button"
+                onclick="copyDomain()">
+
+                📋 ADRESSE KOPIEREN
 
             </button>
 
         </div>
 
 
-        <!-- BUTTONS -->
+        <!-- SPIELER -->
 
-        <div class="hero-buttons">
+        <div class="server-card">
 
-            <a
-                href="#status"
-                class="button primary">
+            <div class="card-icon">
+                👥
+            </div>
 
-                🟢 SERVER STATUS
-
-            </a>
-
-
-            <a
-                href="#wishlist"
-                class="button secondary">
-
-                ⭐ WUNSCHLISTE
-
-            </a>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- SCROLL -->
-
-    <div class="scroll-down">
-
-        ↓
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     SERVER STATUS
-===================================================== -->
-
-<section
-    id="status"
-    class="section">
-
-
-    <div class="section-heading">
-
-        <span>
-            SERVER
-        </span>
-
-        <h2>
-            SERVERSTATUS
-        </h2>
-
-        <p>
-            Hier siehst du den aktuellen Status unseres Servers.
-        </p>
-
-    </div>
-
-
-    <div class="status-card">
-
-
-        <div
-            class="status-light"
-            id="statusIcon">
-
-            🟢
-
-        </div>
-
-
-        <div class="status-information">
-
-            <small>
-                AKTUELLER STATUS
-            </small>
-
-            <h3 id="statusTitle">
-                Server ist online
+            <h3>
+                Spieler
             </h3>
 
-            <p id="statusDescription">
-                Unser Minecraft Server ist momentan erreichbar.
+
+            <div
+                id="playerCount"
+                class="player-number">
+
+                0
+
+            </div>
+
+
+            <p>
+                Spieler auf dem Server
             </p>
 
         </div>
 
 
-        <div class="online-players">
-
-            <strong id="playerCount">
-                0
-            </strong>
-
-            <span>
-                Spieler online
-            </span>
-
-        </div>
-
-
     </div>
 
 </section>
-
 
 
 <!-- =====================================================
@@ -271,21 +268,19 @@
 
 <section
     id="social"
-    class="section">
+    class="section social-section">
 
 
-    <div class="section-heading">
+    <div class="section-title">
 
-        <span>
-            COMMUNITY
-        </span>
+        <span>COMMUNITY</span>
 
         <h2>
-            UNSERE KANÄLE
+            Unsere Kanäle
         </h2>
 
         <p>
-            Folge uns auf unseren Social-Media-Kanälen.
+            Folge uns und verpasse nichts.
         </p>
 
     </div>
@@ -295,11 +290,12 @@
         id="socialLinks"
         class="social-grid">
 
+        <!-- Wird automatisch durch JavaScript erstellt -->
+
     </div>
 
 
 </section>
-
 
 
 <!-- =====================================================
@@ -308,84 +304,76 @@
 
 <section
     id="wishlist"
-    class="section">
+    class="section wishlist-section">
 
 
-    <div class="section-heading">
+    <div class="section-title">
 
-        <span>
-            COMMUNITY
-        </span>
+        <span>COMMUNITY</span>
 
         <h2>
-            SPIELER-WUNSCHLISTE
+            Spieler-Wunschliste
         </h2>
 
         <p>
-            Hast du eine Idee für unseren Server?
-            Schicke sie uns!
+            Hast du einen Wunsch für den Server?
+            Schicke ihn uns!
         </p>
 
     </div>
 
 
-    <div class="wishlist-layout">
+    <div class="wishlist-box">
 
 
-        <div class="wishlist-info">
+        <form id="wishlistForm">
 
-            <div class="big-icon">
-                ⭐
+
+            <div class="input-group">
+
+                <label>
+                    Dein Spielername
+                </label>
+
+                <input
+                    id="wishName"
+                    type="text"
+                    placeholder="z.B. Steve123"
+                    maxlength="40"
+                    required>
+
             </div>
 
-            <h3>
-                Deine Idee zählt!
-            </h3>
 
-            <p>
-                Schlage neue Features, Events,
-                Spielmodi oder andere Dinge für
-                unseren Minecraft Server vor.
-            </p>
+            <div class="input-group">
 
-        </div>
+                <label>
+                    Titel
+                </label>
 
+                <input
+                    id="wishTitle"
+                    type="text"
+                    placeholder="z.B. Neuer Spielmodus"
+                    maxlength="80"
+                    required>
 
-        <form
-            id="wishlistForm"
-            class="wishlist-form">
-
-
-            <label>
-                Minecraft-Name
-            </label>
-
-            <input
-                id="wishName"
-                type="text"
-                placeholder="z.B. Steve123"
-                required>
+            </div>
 
 
-            <label>
-                Titel
-            </label>
+            <div class="input-group">
 
-            <input
-                id="wishTitle"
-                type="text"
-                placeholder="z.B. Neuer Spielmodus"
-                required>
+                <label>
+                    Dein Wunsch
+                </label>
 
+                <textarea
+                    id="wishText"
+                    placeholder="Was wünschst du dir?"
+                    maxlength="1000"
+                    required></textarea>
 
-            <label>
-                Dein Wunsch
-            </label>
-
-            <textarea
-                id="wishText"
-                placeholder="Beschreibe deine Idee..."
-                required></textarea>
+            </div>
 
 
             <button
@@ -412,6 +400,8 @@
 </section>
 
 
+</main>
+
 
 <!-- =====================================================
      FOOTER
@@ -420,9 +410,7 @@
 <footer>
 
     <div class="footer-logo">
-
-        ⛏ MINECRAFT SERVER
-
+        ⛏️ MINECRAFT SERVER
     </div>
 
 
@@ -431,28 +419,37 @@
     </p>
 
 
-    <span>
+    <p class="copyright">
         © 2026 Minecraft Server
-    </span>
+    </p>
+
+
+    <button
+        class="footer-owner"
+        onclick="openLogin()">
+
+        🔐 Owner Login
+
+    </button>
 
 </footer>
 
 
-
 <!-- =====================================================
-     LOGIN FENSTER
+     OWNER LOGIN
 ===================================================== -->
 
 <div
     id="loginOverlay"
-    class="modal">
+    class="modal-overlay">
 
 
-    <div class="login-box">
+    <div
+        class="login-box">
 
 
         <button
-            class="modal-close"
+            class="close-button"
             onclick="closeLogin()">
 
             ×
@@ -460,53 +457,80 @@
         </button>
 
 
-        <div class="login-symbol">
-            🔐
+        <div class="login-icon">
+            👑
         </div>
 
 
         <h2>
-            OWNER LOGIN
+            Owner Login
         </h2>
 
 
         <p>
-            Nur für den Seiten-Owner
+            Melde dich als Webseiten-Owner an.
         </p>
 
 
-        <input
-            id="ownerEmail"
-            type="email"
-            placeholder="E-Mail-Adresse">
+        <form
+            id="loginForm"
+            onsubmit="event.preventDefault(); ownerLogin();">
 
 
-        <input
-            id="ownerPassword"
-            type="password"
-            placeholder="Passwort">
+            <div class="input-group">
+
+                <label>
+                    Owner E-Mail
+                </label>
+
+                <input
+                    id="ownerEmail"
+                    type="email"
+                    placeholder="owner@email.de"
+                    autocomplete="username"
+                    required>
+
+            </div>
 
 
-        <button
-            onclick="ownerLogin()"
-            class="login-button">
+            <div class="input-group">
 
-            EINLOGGEN
+                <label>
+                    Owner Passwort
+                </label>
 
-        </button>
+                <input
+                    id="ownerPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    required>
+
+            </div>
 
 
-        <div
-            id="loginError"
-            class="login-error">
+            <div
+                id="loginError"
+                class="login-error">
 
-        </div>
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button">
+
+                🔐 EINLOGGEN
+
+            </button>
+
+
+        </form>
 
 
     </div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -518,240 +542,193 @@
     class="owner-panel">
 
 
-    <header class="owner-header">
-
+    <div class="owner-header">
 
         <div>
 
-            <small>
-                ADMINISTRATION
-            </small>
+            <span class="owner-badge">
+                👑 OWNER
+            </span>
 
             <h2>
-                OWNER PANEL
+                Owner Panel
             </h2>
 
         </div>
 
 
-        <div class="owner-header-buttons">
+        <button
+            class="close-panel"
+            onclick="closeOwnerPanel()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div class="owner-content">
+
+
+        <!-- SERVER -->
+
+        <div class="admin-section">
+
+            <div class="admin-title">
+                🌐 Server
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Server-Domain
+                </label>
+
+                <input
+                    id="domainInput"
+                    type="text"
+                    placeholder="play.deinserver.de">
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Serverstatus
+                </label>
+
+                <select id="statusInput">
+
+                    <option value="online">
+                        🟢 Online
+                    </option>
+
+                    <option value="offline">
+                        🔴 Offline
+                    </option>
+
+                    <option value="maintenance">
+                        🟡 Wartung
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Spielerzahl
+                </label>
+
+                <input
+                    id="playersInput"
+                    type="number"
+                    min="0"
+                    value="0">
+
+            </div>
+
 
             <button
-                onclick="saveEverything()">
+                class="admin-save"
+                onclick="saveServer()">
 
-                💾 SPEICHERN
-
-            </button>
-
-
-            <button
-                class="close-owner"
-                onclick="closeOwnerPanel()">
-
-                ×
+                💾 SERVER SPEICHERN
 
             </button>
 
         </div>
 
 
-    </header>
+        <!-- SOCIAL -->
+
+        <div class="admin-section">
+
+            <div class="admin-title">
+                📱 Social Media
+            </div>
 
 
-
-    <main class="owner-main">
-
-
-        <!-- =================================================
-             SERVER
-        ================================================== -->
-
-        <div class="admin-card">
-
-
-            <div class="admin-card-title">
-
-                <span>
-                    🖥️
-                </span>
-
-                <div>
-
-                    <h3>
-                        SERVER
-                    </h3>
-
-                    <p>
-                        Serverinformationen verwalten
-                    </p>
-
-                </div>
+            <div
+                id="adminSocialList"
+                class="admin-social-list">
 
             </div>
 
 
-            <label>
-                Server-Domain
-            </label>
+            <div class="admin-buttons">
 
-            <input
-                id="domainInput"
-                type="text"
-                placeholder="play.deinserver.de">
+                <button
+                    class="admin-add"
+                    onclick="addSocialLink()">
 
+                    ＋ KANAL HINZUFÜGEN
 
-            <label>
-                Serverstatus
-            </label>
-
-            <select id="statusInput">
-
-                <option value="online">
-                    🟢 Online
-                </option>
-
-                <option value="offline">
-                    🔴 Offline
-                </option>
-
-                <option value="maintenance">
-                    🟡 Wartung
-                </option>
-
-            </select>
+                </button>
 
 
-            <label>
-                Spieler online
-            </label>
+                <button
+                    class="admin-save"
+                    onclick="saveSocialLinks()">
 
-            <input
-                id="playersInput"
-                type="number"
-                min="0"
-                value="0">
+                    💾 LINKS SPEICHERN
 
+                </button>
 
-            <button
-                onclick="saveServer()"
-                class="admin-save">
-
-                SERVER SPEICHERN
-
-            </button>
-
+            </div>
 
         </div>
 
 
+        <!-- WÜNSCHE -->
 
-        <!-- =================================================
-             SOCIAL
-        ================================================== -->
+        <div class="admin-section">
 
-        <div class="admin-card">
-
-
-            <div class="admin-card-title">
-
-                <span>
-                    🔗
-                </span>
-
-                <div>
-
-                    <h3>
-                        SOCIAL MEDIA
-                    </h3>
-
-                    <p>
-                        YouTube, TikTok und Discord
-                    </p>
-
-                </div>
-
+            <div class="admin-title">
+                ⭐ Spieler-Wünsche
             </div>
 
 
-            <div id="adminSocialList">
+            <div
+                id="adminWishlist"
+                class="admin-wishlist">
 
             </div>
 
 
             <button
-                onclick="addSocialLink()"
-                class="add-button">
-
-                ＋ KANAL HINZUFÜGEN
-
-            </button>
-
-
-            <button
-                onclick="saveSocialLinks()"
-                class="admin-save">
-
-                LINKS SPEICHERN
-
-            </button>
-
-
-        </div>
-
-
-
-        <!-- =================================================
-             WUNSCHLISTE
-        ================================================== -->
-
-        <div class="admin-card wishlist-admin">
-
-
-            <div class="admin-card-title">
-
-                <span>
-                    ⭐
-                </span>
-
-                <div>
-
-                    <h3>
-                        SPIELER-WÜNSCHE
-                    </h3>
-
-                    <p>
-                        Eingegangene Wünsche verwalten
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div id="adminWishlist">
-
-                Keine Wünsche vorhanden.
-
-            </div>
-
-
-            <button
-                onclick="clearWishlist()"
-                class="delete-all">
+                class="admin-delete-all"
+                onclick="clearWishlist()">
 
                 🗑 ALLE WÜNSCHE LÖSCHEN
 
             </button>
 
-
         </div>
 
 
-    </main>
+    </div>
+
+
+    <div class="owner-footer">
+
+        <button
+            onclick="closeOwnerPanel()"
+            class="logout-button">
+
+            🚪 ABMELDEN
+
+        </button>
+
+    </div>
 
 
 </div>
-
 
 
 <script src="script.js"></script>
