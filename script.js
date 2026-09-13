@@ -18,9 +18,8 @@
 const OWNER_EMAIL =
     "serverowner@gmail.com";
 
-
 const OWNER_PASSWORD =
-    "Server!";
+    "Server";
 
 
 /* =========================================================
